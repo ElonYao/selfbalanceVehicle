@@ -2,7 +2,7 @@
 
 sensorFusion/MadgwickAHRS.obj: ../sensorFusion/MadgwickAHRS.c
 sensorFusion/MadgwickAHRS.obj: ../sensorFusion/MadgwickAHRS.h
-sensorFusion/MadgwickAHRS.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/driverlib.h
+sensorFusion/MadgwickAHRS.obj: C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/device/driverlib.h
 sensorFusion/MadgwickAHRS.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_memmap.h
 sensorFusion/MadgwickAHRS.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/adc.h
 sensorFusion/MadgwickAHRS.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdbool.h
@@ -96,7 +96,7 @@ sensorFusion/MadgwickAHRS.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.
 
 ../sensorFusion/MadgwickAHRS.h:
 
-C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/driverlib.h:
+C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/device/driverlib.h:
 
 C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_memmap.h:
 

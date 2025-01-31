@@ -256,7 +256,7 @@ __interrupt void INT_IMU_data_Ready_XINT_ISR(void)
 
              //motor1.dutyCycle=vehicle1.balancePWM-speedController.term.Out+steeringPID.out;
              //motor2.dutyCycle=vehicle1.balancePWM-speedController.term.Out-steeringPID.out;
-             //fitler testing code
+             //filter testing code
              motor1.dutyCycle=800.0f;
              motor2.dutyCycle=800.0f;
              HAL_vehicleRun(motor1Handle,motor2Handle);
