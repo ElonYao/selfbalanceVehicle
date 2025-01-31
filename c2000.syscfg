@@ -1,0 +1,157 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --board "/boards/LAUNCHXL_F28379D" --device "F2837xD" --part "F2837xD_337ZWT" --package "F2837xD_337ZWT" --context "CPU1" --product "C2000WARE@5.04.00.00"
+ * @v2CliArgs --device "TMS320F28379D" --package "337ZWT" --board "/boards/LAUNCHXL_F28379D" --context "CPU1" --product "C2000WARE@5.04.00.00"
+ * @versions {"tool":"1.21.0+3721"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false);
+const cputimer1        = cputimer.addInstance();
+const epwm             = scripting.addModule("/driverlib/epwm.js", {}, false);
+const epwm1            = epwm.addInstance();
+const eqep             = scripting.addModule("/driverlib/eqep.js", {}, false);
+const eqep1            = eqep.addInstance();
+const eqep2            = eqep.addInstance();
+const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
+const gpio1            = gpio.addInstance();
+const gpio2            = gpio.addInstance();
+const gpio3            = gpio.addInstance();
+const gpio4            = gpio.addInstance();
+const gpio5            = gpio.addInstance();
+const i2c              = scripting.addModule("/driverlib/i2c.js", {}, false);
+const i2c1             = i2c.addInstance();
+const inputxbar_input  = scripting.addModule("/driverlib/inputxbar_input.js", {}, false);
+const inputxbar_input1 = inputxbar_input.addInstance();
+const sci              = scripting.addModule("/driverlib/sci.js", {}, false);
+const sci1             = sci.addInstance();
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+cputimer1.$name       = "filterTimer";
+cputimer1.timerPeriod = 2000000;
+cputimer1.startTimer  = true;
+
+epwm1.$name                                                    = "MotorControl";
+epwm1.epwmTimebase_periodLoadMode                              = "EPWM_PERIOD_DIRECT_LOAD";
+epwm1.epwmTripZone_EPWM_TZ_ACTION_EVENT_TZA                    = "EPWM_TZ_ACTION_LOW";
+epwm1.epwmTripZone_EPWM_TZ_ACTION_EVENT_TZB                    = "EPWM_TZ_ACTION_LOW";
+epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_A_shadowMode          = true;
+epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_B_shadowMode          = true;
+epwm1.epwmCounterCompare_cmpA                                  = 10;
+epwm1.epwmCounterCompare_cmpB                                  = 10;
+epwm1.epwmTimebase_hsClockDiv                                  = "EPWM_HSCLOCK_DIVIDER_1";
+epwm1.epwmTimebase_syncOutPulseMode                            = "EPWM_SYNC_OUT_PULSE_ON_COUNTER_ZERO";
+epwm1.epwmTripZone_oneShotSource                               = ["EPWM_TZ_SIGNAL_OSHT5"];
+epwm1.epwmTimebase_counterMode                                 = "EPWM_COUNTER_MODE_UP";
+epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_A_ON_TIMEBASE_ZERO    = "EPWM_AQ_OUTPUT_HIGH";
+epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_A_ON_TIMEBASE_UP_CMPA = "EPWM_AQ_OUTPUT_LOW";
+epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_B_ON_TIMEBASE_ZERO    = "EPWM_AQ_OUTPUT_HIGH";
+epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_B_ON_TIMEBASE_UP_CMPB = "EPWM_AQ_OUTPUT_LOW";
+epwm1.epwmTimebase_period                                      = 5000;
+epwm1.epwm.$assign                                             = "EPWM6";
+epwm1.epwm.epwm_aPin.$assign                                   = "boosterpack2.76";
+epwm1.epwm.epwm_bPin.$assign                                   = "boosterpack2.75";
+scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to EPWM6 BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", epwm1.epwm, "epwm_aPin");
+scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to EPWM6 BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", epwm1.epwm, "epwm_bPin");
+
+eqep1.$name                   = "EQEP_motorA";
+eqep1.$hardware               = system.deviceData.board.components.EQEP1_HEADER;
+eqep1.positionCounterMax      = 4294967295;
+eqep1.latchPositionCounter    = "EQEP_LATCH_UNIT_TIME_OUT";
+eqep1.enableUnitTimer         = true;
+eqep1.unitTimerPeriod         = 2000000;
+eqep1.swPositionInit          = true;
+eqep1.enableModule            = true;
+eqep1.registerInterrupts      = true;
+eqep1.enableInterrupt         = true;
+eqep1.emulationMode           = "EQEP_EMULATIONMODE_RUNFREE";
+eqep1.eqepResolution          = "EQEP_CONFIG_1X_RESOLUTION";
+eqep1.interruptSources        = ["EQEP_INT_UNIT_TIME_OUT"];
+eqep1.eqepInt.enableInterrupt = true;
+
+eqep2.$name                   = "EQEP_motorB";
+eqep2.$hardware               = system.deviceData.board.components.EQEP2_HEADER;
+eqep2.eqepResolution          = "EQEP_CONFIG_1X_RESOLUTION";
+eqep2.latchPositionCounter    = "EQEP_LATCH_UNIT_TIME_OUT";
+eqep2.swPositionInit          = true;
+eqep2.enableModule            = true;
+eqep2.enableUnitTimer         = true;
+eqep2.unitTimerPeriod         = 2000000;
+eqep2.emulationMode           = "EQEP_EMULATIONMODE_RUNFREE";
+eqep2.positionCounterMax      = 4294967295;
+eqep2.registerInterrupts      = true;
+eqep2.enableInterrupt         = true;
+eqep2.interruptSources        = ["EQEP_INT_UNIT_TIME_OUT"];
+eqep2.eqepInt.enableInterrupt = true;
+
+gpio1.$name           = "A1";
+gpio1.direction       = "GPIO_DIR_MODE_OUT";
+gpio1.gpioPin.$assign = "boosterpack2.74";
+
+gpio2.$name           = "A2";
+gpio2.direction       = "GPIO_DIR_MODE_OUT";
+gpio2.gpioPin.$assign = "boosterpack2.73";
+
+gpio3.$name                     = "IMU_data_Ready";
+gpio3.useInterrupt              = true;
+gpio3.gpioPin.$assign           = "boosterpack1.8";
+gpio3.xint.intType              = "GPIO_INT_TYPE_RISING_EDGE";
+gpio3.xint.enableInt            = true;
+gpio3.xint.registerInterrupts   = true;
+gpio3.xint.xInt.enableInterrupt = true;
+
+gpio4.direction       = "GPIO_DIR_MODE_OUT";
+gpio4.$name           = "B1";
+gpio4.gpioPin.$assign = "boosterpack2.52";
+
+gpio5.direction       = "GPIO_DIR_MODE_OUT";
+gpio5.$name           = "B2";
+gpio5.gpioPin.$assign = "boosterpack2.51";
+
+i2c1.$name              = "IMU_6050";
+i2c1.bitCount           = "I2C_BITCOUNT_8";
+i2c1.targetAddress      = 0x68;
+i2c1.useInterrupts      = false;
+i2c1.useFifo            = false;
+i2c1.emulationMode      = "I2C_EMULATION_FREE_RUN";
+i2c1.dataCount          = 0;
+i2c1.i2c.$assign        = "I2CA";
+i2c1.i2c.sdaPin.$assign = "boosterpack1.10";
+i2c1.i2c.sclPin.$assign = "boosterpack1.9";
+i2c1.sdaQual.padConfig  = "STD";
+i2c1.sclQual.padConfig  = "STD";
+scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to I2CA BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", i2c1.i2c, "sdaPin");
+scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to I2CA BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", i2c1.i2c, "sclPin");
+
+inputxbar_input1.$name         = "myINPUTXBARINPUT0";
+gpio3.xint.inputxbar           = inputxbar_input1;
+inputxbar_input1.inputxbarGpio = "GPIO22";
+
+sci1.$name                 = "Data_output";
+sci1.useInterrupts         = false;
+sci1.sci.$assign           = "SCIA";
+sci1.sci.scirxdPin.$assign = "GPIO43";
+sci1.sci.scitxdPin.$assign = "GPIO42";
+sci1.rxQual.$name          = "myGPIOQUAL0";
+sci1.txQual.$name          = "myGPIOQUAL1";
+scripting.suppress("Not pinned out,@@@.+?@@@ is not pinned out on the LaunchPad F28379D\\.  @@@.+?@@@", sci1.sci, "scirxdPin");
+scripting.suppress("Not pinned out,@@@.+?@@@ is not pinned out on the LaunchPad F28379D\\.  @@@.+?@@@", sci1.sci, "scitxdPin");
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+eqep1.eqep.$suggestSolution          = "EQEP1";
+eqep1.eqep.eqepaPin.$suggestSolution = "qepA.1";
+eqep1.eqep.eqepbPin.$suggestSolution = "qepA.2";
+eqep1.eqep.eqepiPin.$suggestSolution = "qepA.3";
+eqep2.eqep.$suggestSolution          = "EQEP2";
+eqep2.eqep.eqepaPin.$suggestSolution = "qepB.1";
+eqep2.eqep.eqepbPin.$suggestSolution = "qepB.2";
+eqep2.eqep.eqepiPin.$suggestSolution = "qepB.3";

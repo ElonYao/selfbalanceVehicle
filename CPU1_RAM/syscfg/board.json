@@ -1,0 +1,16 @@
+{
+    "interruptInfo" : [
+        {
+            "interruptName": "INT_EQEP_motorA",
+            "interruptHandler": "INT_EQEP_motorA_ISR"
+        },
+        {
+            "interruptName": "INT_EQEP_motorB",
+            "interruptHandler": "INT_EQEP_motorB_ISR"
+        },
+        {
+            "interruptName": "INT_IMU_data_Ready_XINT",
+            "interruptHandler": "INT_IMU_data_Ready_XINT_ISR"
+        }
+    ]
+}
