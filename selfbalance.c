@@ -293,7 +293,7 @@ __interrupt void INT_EQEP_motorB_ISR(void)
     //update vehicle speed here
     //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 25Hz CUTOFF here to filter the speed.
     vehicle1.speedMSRight=vehicle1.speedMSRight*0.611f+eqepMotorB.speedMS*0.398f;
-    data_print(eqepMotorB.speedMS,vehicle1.speedMSRight);
+    //data_print(eqepMotorB.speedMS,vehicle1.speedMSRight);
     vehicle1.vehicleDirection=eqepMotorA.dir;
     //clear global flag!!
     EQEP_clearInterruptStatus(EQEP_motorB_BASE, EQEP_INT_UNIT_TIME_OUT  | EQEP_INT_GLOBAL);
