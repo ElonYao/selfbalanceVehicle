@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v22.6.1                     
 ******************************************************************************
->> Linked Thu Jan 30 20:14:21 2025
+>> Linked Thu Jan 30 20:17:39 2025
 
 OUTPUT FILE NAME:   <selfBalance.out>
 ENTRY POINT SYMBOL: "code_start"  address: 00000000
@@ -46,7 +46,7 @@ PAGE 1:
   RAMGS2                0000e000   00001000  00000000  00001000  RWIX
   RAMGS3                0000f000   00001000  00001000  00000000  RWIX
   RAMGS4                00010000   00001000  00001000  00000000  RWIX
-  RAMGS5                00011000   00001000  00000237  00000dc9  RWIX
+  RAMGS5                00011000   00001000  00000234  00000dcc  RWIX
   RAMGS6                00012000   00001000  00000000  00001000  RWIX
   RAMGS7                00013000   00001000  000004b0  00000b50  RWIX
   RAMGS8                00014000   00001000  00000000  00001000  RWIX
@@ -133,9 +133,11 @@ PUTREADIDX
                   0000f3f6    000003e7     hal.obj (.text)
                   0000f7dd    0000036f     IMU6050_Elon.obj (.text)
                   0000fb4c    00000357     device.obj (.text)
-                  0000fea3    00000131     selfbalance.obj (.text:retain)
-                  0000ffd4    0000002b     rts2800_fpu32_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit)
-                  0000ffff    00000001     c2000ware_libraries.obj (.text)
+                  0000fea3    0000012e     selfbalance.obj (.text:retain)
+                  0000ffd1    0000002b     rts2800_fpu32_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit)
+                  0000fffc    00000002                            : pre_init.c.obj (.text)
+                  0000fffe    00000001     c2000ware_libraries.obj (.text)
+                  0000ffff    00000001     rts2800_fpu32_eabi.lib : _lock.c.obj (.text)
 
 .text.2    1    00010000    00001000     
                   00010000    00000209     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_setClock)
@@ -179,7 +181,7 @@ PUTREADIDX
                   00010fca    0000001c                            : memcpy.c.obj (.text)
                   00010fe6    0000001a     driverlib_eabi.lib : sysctl.obj (.text:CPUTimer_startTimer)
 
-.text.3    1    00011000    00000237     
+.text.3    1    00011000    00000234     
                   00011000    0000001b     driverlib_eabi.lib : sci.obj (.text:SCI_isBaseValid)
                   0001101b    0000001a                        : sci.obj (.text:SCI_isSpaceAvailableNonFIFO)
                   00011035    0000001a                        : sysctl.obj (.text:SysCtl_getLowSpeedClock)
@@ -213,18 +215,16 @@ PUTREADIDX
                   0001121e    00000008     rts2800_fpu32_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none)
                   00011226    00000007     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_resetMCD)
                   0001122d    00000006     rts2800_fpu32_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI)
-                  00011233    00000002                            : pre_init.c.obj (.text)
-                  00011235    00000001                            : _lock.c.obj (.text)
-                  00011236    00000001                            : startup.c.obj (.text)
+                  00011233    00000001                            : startup.c.obj (.text)
 
 MODULE SUMMARY
 
        Module                                   code   ro data   rw data
        ------                                   ----   -------   -------
     .\
-       selfbalance.obj                          663    0         1962   
+       selfbalance.obj                          660    0         1962   
     +--+----------------------------------------+------+---------+---------+
-       Total:                                   663    0         1962   
+       Total:                                   660    0         1962   
                                                                         
     .\HAL\
        hal.obj                                  999    0         0      
@@ -256,7 +256,7 @@ MODULE SUMMARY
        Total:                                   1015   0         0      
                                                                         
     C:\Users\yao19\AppData\Local\Temp\
-       {E7624E52-4D71-4BF5-AB8C-C8C0BF53C6AE}   0      220       0      
+       {BAD8F53D-CD92-47B5-A101-A8483703D064}   0      220       0      
     +--+----------------------------------------+------+---------+---------+
        Total:                                   0      220       0      
                                                                         
@@ -301,7 +301,7 @@ MODULE SUMMARY
        Stack:                                   0      0         256    
        Linker Generated:                        0      52        0      
     +--+----------------------------------------+------+---------+---------+
-       Grand Total:                             8765   1250      2233   
+       Grand Total:                             8762   1250      2233   
 
 
 LINKER GENERATED COPY TABLES
@@ -376,7 +376,7 @@ page  address   name
 ----  -------   ----                                     
 1     0000f32c  Board_init                               
 1     00010edd  C$$EXIT                                  
-1     0000ffff  C2000Ware_libraries_init                 
+1     0000fffe  C2000Ware_libraries_init                 
 1     0001112f  CPUTimer_setEmulationMode                
 1     000108d6  DLOG_4CH_F_FUNC                          
 1     000108b7  DLOG_4CH_F_init                          
@@ -416,7 +416,7 @@ page  address   name
 1     0000f7f2  IMURead                                  
 1     0000f8e0  IMUWrite                                 
 1     0000f273  IMU_6050_init                            
-1     0000ff7e  INT_EQEP_motorA_ISR                      
+1     0000ff7b  INT_EQEP_motorA_ISR                      
 1     0000ff22  INT_EQEP_motorB_ISR                      
 1     0000fea3  INT_IMU_data_Ready_XINT_ISR              
 1     000110db  Interrupt_defaultHandler                 
@@ -446,7 +446,7 @@ page  address   name
 0     00000150  __TI_Handler_Table_Limit                 
 1     00000500  __TI_STACK_END                           
 abs   00000100  __TI_STACK_SIZE                          
-1     0000ffd4  __TI_auto_init_nobinit_nopinit           
+1     0000ffd1  __TI_auto_init_nobinit_nopinit           
 0     00008042  __TI_cleanup_ptr                         
 1     00010e59  __TI_decompress_lzss                     
 1     0001121e  __TI_decompress_none                     
@@ -473,9 +473,9 @@ n/a   UNDEFED   __c_args__
 1     000111e2  _args_main                               
 1     000110c4  _c_int00                                 
 0     0000803c  _lock                                    
-1     00011235  _nop                                     
-1     00011236  _system_post_cinit                       
-1     00011233  _system_pre_init                         
+1     0000ffff  _nop                                     
+1     00011233  _system_post_cinit                       
+1     0000fffc  _system_pre_init                         
 1     00010edd  abort                                    
 1     00010467  asinf                                    
 1     0000fa43  checkAttendence                          
@@ -614,9 +614,11 @@ page  address   name
 1     0000fd32  Device_bootCPU2                          
 1     0000fea3  INT_IMU_data_Ready_XINT_ISR              
 1     0000ff22  INT_EQEP_motorB_ISR                      
-1     0000ff7e  INT_EQEP_motorA_ISR                      
-1     0000ffd4  __TI_auto_init_nobinit_nopinit           
-1     0000ffff  C2000Ware_libraries_init                 
+1     0000ff7b  INT_EQEP_motorA_ISR                      
+1     0000ffd1  __TI_auto_init_nobinit_nopinit           
+1     0000fffc  _system_pre_init                         
+1     0000fffe  C2000Ware_libraries_init                 
+1     0000ffff  _nop                                     
 1     00010000  SysCtl_setClock                          
 1     00010209  main                                     
 1     0001036f  updatePIDcontroller                      
@@ -672,9 +674,7 @@ page  address   name
 1     00011203  Interrupt_nmiHandler                     
 1     0001121e  __TI_decompress_none                     
 1     0001122d  __TI_zero_init                           
-1     00011233  _system_pre_init                         
-1     00011235  _nop                                     
-1     00011236  _system_post_cinit                       
+1     00011233  _system_post_cinit                       
 abs   00000100  __TI_STACK_SIZE                          
 abs   ffffffff  __TI_pprof_out_hndl                      
 abs   ffffffff  __TI_prof_data_size                      

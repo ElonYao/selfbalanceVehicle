@@ -275,7 +275,8 @@ __interrupt void INT_EQEP_motorA_ISR(void)
     {
         HAL_speedCalculation(eqepMotorAHandle);
     }
-    //First order filter
+
+    //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 25Hz CUTOFF here to filter the speed.
     vehicle1.speedMSLeft=vehicle1.speedMSLeft*0.611f+eqepMotorA.speedMS*0.398f;
     data_print(eqepMotorA.speedMS,vehicle1.speedMSLeft);
     //clear global flag!!
