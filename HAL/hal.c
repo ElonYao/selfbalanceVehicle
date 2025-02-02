@@ -98,6 +98,7 @@ void HAL_balanceControl(vehicleHandle vehiclehandle,IMUHandle imuhandle)
     vehicle_t *obj_V= (vehicle_t *)vehiclehandle;
     MPU6050_T *obj_IMU=( MPU6050_T *) imuhandle;
     float32_t result=0.0f;
+    //subtract mechanical zero point roll angle and angular speed offset
     obj_V->fbAngle=obj_IMU->orientation.roll*MATH_R2D-2.21f;
     result=(obj_V->targetAngle-obj_V->fbAngle)*obj_V->balanceKp+obj_V->balanceKd*(0-obj_IMU->GX*MATH_R2D);
     obj_V->balancePWM=_constrain(result,obj_V->outMin,obj_V->outMax);
