@@ -48,8 +48,8 @@ Default initial values for the PID objects
 
 #define PID_PARAM_DEFAULTS {			\
                            1.0,	\
-                           5.1f, /*Proportional*/	\
-                           0.0f,/*ki*/	\
+                           0.06f, /*Proportional*/	\
+                           12.17f,/*ki*/	\
                            0.0f,	/*kd*/\
                            1.0,	\
                            4735.0f,	\

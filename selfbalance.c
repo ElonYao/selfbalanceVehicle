@@ -89,11 +89,17 @@ quadratureHandle eqepMotorBHandle;
 //speed trajectory
 rampControl_t speedRamp=RAMPCTL_DEFAULTS;
 
-//balance control
+//speed control
 PID_CONTROLLER_t speedController={PID_TERM_DEFAULTS,PID_PARAM_DEFAULTS,PID_DATA_DEFAULTS};
+PIDController_t speedController_Right;
+pidHandle speedController_RightHandle;
+
+PIDController_t speedController_Left;
+pidHandle speedController_LeftHandle;
 
 PIDController_t steeringPID;
 pidHandle steeringHandle;
+
 
 
 // Data log for debugging
@@ -191,6 +197,9 @@ void main(void)
     eqepMotorB.eqepBase=EQEP_motorB_BASE;
     eqepMotorBHandle=HAL_quadratureEncoderInit(&eqepMotorB,sizeof(eqepMotorB));
 
+    speedController_RightHandle=pidControllerInit(&speedController_Right,sizeof(speedController_Right));
+    speedController_LeftHandle=pidControllerInit(&speedController_Left,sizeof(speedController_Left));
+
 
     steeringHandle=pidControllerInit(&steeringPID, sizeof(steeringPID));
 
@@ -220,14 +229,19 @@ void main(void)
         {
             RC_MACRO(speedRamp)
 
-             //speed control
-             speedController.term.Ref=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;//change to mm/s for a easier PI fine-tune;
-             speedController.term.Fbk=vehicle1.vehicleDirection*vehicle1.speedMS*1000;//change to mm/s for a easier PI fine-tune;
-             PID_MACRO(speedController)
+            //right wheel speed control
+            speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+            speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
+            updateP_Icontroller(speedController_RightHandle);
+            //left wheel speed control
+            speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+            speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
+            updateP_Icontroller(speedController_LeftHandle);
+
              //yaw rate control
              steeringPID.fbValue=imu1.GZ*MATH_R2D+2.8f;
              steeringPID.refInput=vehicle1.targetYawRate;
-             updatePIDcontroller(steeringHandle);
+            // updatePIDcontroller(steeringHandle);
 
              //status_send(imu1.orientation.roll*MATH_R2D, imu1.orientation.pitch*MATH_R2D, imu1.orientation.yaw*MATH_R2D);
 
@@ -254,17 +268,17 @@ __interrupt void INT_IMU_data_Ready_XINT_ISR(void)
          {
              HAL_balanceControl(vehicle1handle,imu1Handle);
 
-             //motor1.dutyCycle=vehicle1.balancePWM-speedController.term.Out+steeringPID.out;
-             //motor2.dutyCycle=vehicle1.balancePWM-speedController.term.Out-steeringPID.out;
+            //motor1.dutyCycle=vehicle1.balancePWM+speedController_Right.out+steeringPID.out;
+            //motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-steeringPID.out;
              //filter testing code
-             motor1.dutyCycle=800.0f;
-             motor2.dutyCycle=800.0f;
+             motor1.dutyCycle=vehicle1.balancePWM;
+             motor2.dutyCycle=vehicle1.balancePWM;
              HAL_vehicleRun(motor1Handle,motor2Handle);
          }
       //data log functions
-      dlogChan1=vehicle1.speedMS;
-      dlogChan2=steeringPID.out;
-      DLOG_4CH_F_FUNC(&dlog_4ch1);
+     // dlogChan1=vehicle1.speedMS;
+     // dlogChan2=steeringPID.out;
+      //DLOG_4CH_F_FUNC(&dlog_4ch1);
       Interrupt_clearACKGroup(INT_IMU_data_Ready_XINT_INTERRUPT_ACK_GROUP);
 }
 
@@ -276,9 +290,9 @@ __interrupt void INT_EQEP_motorA_ISR(void)
         HAL_speedCalculation(eqepMotorAHandle);
     }
 
-    //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 25Hz CUTOFF here to filter the speed.
-    vehicle1.speedMSLeft=eqepMotorA.speedMS*0.611f+vehicle1.speedMSLeft*0.398f;
-    data_print(eqepMotorA.speedMS,vehicle1.speedMSLeft);
+    //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 5Hz CUTOFF here to filter the speed.
+    vehicle1.speedMSRight=eqepMotorA.speedMS*0.24f+vehicle1.speedMSRight*0.76f;
+    //data_print(speedRamp.setPoint,vehicle1.speedMSRight);
     //clear global flag!!
     EQEP_clearInterruptStatus(EQEP_motorA_BASE, EQEP_INT_UNIT_TIME_OUT | EQEP_INT_GLOBAL);
     Interrupt_clearACKGroup(INT_EQEP_motorA_INTERRUPT_ACK_GROUP);
@@ -292,9 +306,9 @@ __interrupt void INT_EQEP_motorB_ISR(void)
         HAL_speedCalculation(eqepMotorBHandle);
     }
     //update vehicle speed here
-    //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 25Hz CUTOFF here to filter the speed.
-    vehicle1.speedMSRight=eqepMotorB.speedMS*0.611f+vehicle1.speedMSRight*0.398f;
-    //data_print(eqepMotorB.speedMS,vehicle1.speedMSRight);
+    //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 5Hz CUTOFF here to filter the speed.
+    vehicle1.speedMSLeft=eqepMotorB.speedMS*0.24f+vehicle1.speedMSLeft*0.76f;
+    //data_print(speedRamp.setPoint,vehicle1.speedMSLeft);
     vehicle1.vehicleDirection=eqepMotorA.dir;
     //clear global flag!!
     EQEP_clearInterruptStatus(EQEP_motorB_BASE, EQEP_INT_UNIT_TIME_OUT  | EQEP_INT_GLOBAL);

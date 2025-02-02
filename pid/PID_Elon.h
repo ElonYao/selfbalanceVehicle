@@ -43,8 +43,9 @@ typedef struct _pidcontroller_
 typedef struct _pidcontroller_ *pidHandle;
 
 pidHandle pidControllerInit(void *pMemory, const size_t numBytes);
-float updatePIDcontroller(pidHandle handle);
+
 float updateP_Icontroller(pidHandle handle);
+float updateP_Dcontroller(pidHandle handle);
 void setKp(pidHandle handle,float kp);
 void setKi(pidHandle handle,float ki);
 void setKd(pidHandle handle,float kd);
