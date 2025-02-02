@@ -7,7 +7,6 @@
 "./device/device.obj"
 "./pid/PID_Elon.obj"
 "./sensorFusion/IMU6050_Elon.obj"
-"./sensorFusion/MadgwickAHRS.obj"
 "./sensorFusion/flightmointor.obj"
 "../2837xD_RAM_lnk_cpu1.cmd"
 "C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/ccs/Debug/driverlib.lib"

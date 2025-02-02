@@ -94,31 +94,6 @@ void setOffset(IMUHandle handle);
 
 #endif
 
-#ifdef kalmanFilter
-typedef struct _kalman_
-{
-    float A[16];//state transition matrix
-    float H[16];//state to measurement matrix identity matrix
-    float K;//kalman gian
-    float P[16];//last error covariant
-    float Pp[4]; // covariance prediction
-    float Q[16]; //process error covariance
-    float R[16]; //measurement error covariance
-    float out_p[4];//prediction value array
-    float out[4];
-
-}kalmanFilter_obj;
-
-typedef struct _kalman_ * kalmanFilterHandle;
-
-kalmanFilterHandle kalmanFilter_init(void *pmemory, const size_t numBytes);
-void quaternion2PRY(euler_t *eul);
-void getEuler(euler_t *eul);
-void kalmanFilter(kalmanFilterHandle handle,euler_t *eul,MPU6050_T *sensor,float Ts_half);
-
-
-#endif
-
 #endif
 
 
