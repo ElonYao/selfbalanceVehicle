@@ -90,12 +90,17 @@ quadratureHandle eqepMotorBHandle;
 rampControl_t speedRamp=RAMPCTL_DEFAULTS;
 
 //speed control
-PID_CONTROLLER_t speedController={PID_TERM_DEFAULTS,PID_PARAM_DEFAULTS,PID_DATA_DEFAULTS};
+//PID_CONTROLLER_t speedController={PID_TERM_DEFAULTS,PID_PARAM_DEFAULTS,PID_DATA_DEFAULTS};
+
 PIDController_t speedController_Right;
 pidHandle speedController_RightHandle;
 
 PIDController_t speedController_Left;
 pidHandle speedController_LeftHandle;
+
+//balance controller
+PIDController_t balanceController;
+pidHandle balanceHandle;
 
 PIDController_t steeringPID;
 pidHandle steeringHandle;
@@ -190,6 +195,12 @@ void main(void)
     imu1Handle=MPU6050init(&imu1,sizeof(imu1));
 
     vehicle1handle=HAL_vehicleInit(&vehicle1,sizeof(vehicle1));
+    //vehicle1.balanceKd=0.0f;
+
+    balanceHandle=pidControllerInit(&balanceController,sizeof(balanceController));
+    balanceController.ts=1.5e-3f;
+    balanceController.kp=55.0f;
+    balanceController.td=0.2f;
 
     eqepMotorA.eqepBase=EQEP_motorA_BASE;
     eqepMotorAHandle=HAL_quadratureEncoderInit(&eqepMotorA,sizeof(eqepMotorA));
@@ -267,12 +278,15 @@ __interrupt void INT_IMU_data_Ready_XINT_ISR(void)
          else
          {
              HAL_balanceControl(vehicle1handle,imu1Handle);
-
+             //balanceController.refInput=vehicle1.targetAngle;//Unit: Degree
+             //balanceController.fbValue=imu1.orientation.roll*MATH_R2D-2.21f;
+            // updateP_Dcontroller(balanceHandle);
             //motor1.dutyCycle=vehicle1.balancePWM+speedController_Right.out+steeringPID.out;
             //motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-steeringPID.out;
              //filter testing code
+             //vehicle1.balancePWM=balanceController.out-vehicle1.balanceKd*imu1.GX*MATH_R2D;
              motor1.dutyCycle=vehicle1.balancePWM;
-             motor2.dutyCycle=vehicle1.balancePWM;
+             motor2.dutyCycle=vehicle1.balancePWM*0.91f;
              HAL_vehicleRun(motor1Handle,motor2Handle);
          }
       //data log functions
