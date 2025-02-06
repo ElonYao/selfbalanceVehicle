@@ -18,8 +18,8 @@ pidHandle pidControllerInit(void *pMemory, const size_t numBytes)
     //variables initialization section
     obj->N=100;//only valid for derivative term
     obj->flag_AntiWindUp=1;
-    obj->kp=0.06f;
-    obj->ti=12.17f;
+    obj->kp=7.0f;
+    obj->ti=0.1f;
     obj->inv_ti=1.0f/obj->ti;
     obj->td=0.0f;
     obj->ts=0.01f;
@@ -30,8 +30,8 @@ pidHandle pidControllerInit(void *pMemory, const size_t numBytes)
     obj->D_term_coe2=(2.0f-obj->N*obj->ts)/(2.0f+obj->N*obj->ts);
     obj->iterm_Max=4375.0f;
     obj->iterm_Min=-4375.0f;
-    obj->outMax=4375.0f;
-    obj->outMin=-4375.0f;
+    obj->outMax=3750.0f;
+    obj->outMin=-3750.0f;
     obj->lastError=0.0f;
     obj->lastMeasure=0.0f;
     obj->out=0.0f;
@@ -43,7 +43,7 @@ float updateP_Icontroller(pidHandle handle)
 {
    PIDController_t * obj = (PIDController_t *) handle;
     //get the error
-    float error=obj->refInput-obj->fbValue;
+    float error=obj->refInput+obj->fbValue;
     float result=0.0f;
 
     //Integrator part
@@ -81,6 +81,25 @@ float updateP_Dcontroller(pidHandle handle)
      obj->out=result;
      obj->lastError=error;
      return result;
+}
+float speedPIcontroller(pidHandle handle)
+{
+    PIDController_t * obj = (PIDController_t *) handle;
+    float error=0.0f,errorUpdate=0.0f;
+    float speedTarget=0.0f;
+    errorUpdate=obj->refInput-obj->fbValue;
+    error=obj->lastError*0.6f+errorUpdate*0.4f;
+    obj->I_term+=error*0.01f;
+    //speedTarget=obj->refInput*0.001f*0.01f;
+    //obj->I_term+=speedTarget;
+    if(obj->flag_AntiWindUp)
+    {
+        obj->I_term=((obj->I_term<obj->iterm_Min)? obj->iterm_Min : ((obj->I_term>obj->iterm_Max)? obj->iterm_Max : obj->I_term));
+    }
+    obj->out=-obj->kp*error-obj->ti*obj->I_term;
+
+    obj->lastError=error;
+
 }
 void setKp(pidHandle handle,float kp)
 {
