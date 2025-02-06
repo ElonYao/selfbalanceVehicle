@@ -195,12 +195,12 @@ void main(void)
     imu1Handle=MPU6050init(&imu1,sizeof(imu1));
 
     vehicle1handle=HAL_vehicleInit(&vehicle1,sizeof(vehicle1));
-    //vehicle1.balanceKd=0.0f;
+    //vehicle1.balanceKd=1.0f;
 
     balanceHandle=pidControllerInit(&balanceController,sizeof(balanceController));
     balanceController.ts=1.5e-3f;
     balanceController.kp=55.0f;
-    balanceController.td=0.2f;
+    balanceController.td=0.85f;
 
     eqepMotorA.eqepBase=EQEP_motorA_BASE;
     eqepMotorAHandle=HAL_quadratureEncoderInit(&eqepMotorA,sizeof(eqepMotorA));
@@ -210,7 +210,10 @@ void main(void)
 
     speedController_RightHandle=pidControllerInit(&speedController_Right,sizeof(speedController_Right));
     speedController_LeftHandle=pidControllerInit(&speedController_Left,sizeof(speedController_Left));
-
+    speedController_Right.iterm_Min=-200.0f;
+    speedController_Right.iterm_Max=200.0f;
+    speedController_Left.iterm_Min=-200.0f;
+    speedController_Left.iterm_Max=200.0f;
 
     steeringHandle=pidControllerInit(&steeringPID, sizeof(steeringPID));
 
@@ -235,26 +238,47 @@ void main(void)
         //falling detection
         HAL_fallDetection(vehicle1handle,imu1Handle);
         HAL_hoverDetection(vehicle1handle,imu1Handle);
-
+        HAL_proportionalSteering(vehicle1handle);
         if(CPUTimer_getTimerOverflowStatus(filterTimer_BASE))
         {
-            RC_MACRO(speedRamp)
 
-            //right wheel speed control
-            speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-            speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
-            updateP_Icontroller(speedController_RightHandle);
-            //left wheel speed control
-            speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-            speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
-            updateP_Icontroller(speedController_LeftHandle);
+                RC_MACRO(speedRamp)
 
-             //yaw rate control
-             steeringPID.fbValue=imu1.GZ*MATH_R2D+2.8f;
-             steeringPID.refInput=vehicle1.targetYawRate;
-            // updatePIDcontroller(steeringHandle);
+                //right wheel speed control
+                speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+                speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
+               speedPIcontroller(speedController_RightHandle);
+                //left wheel speed control
+                speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+               speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
+               speedPIcontroller(speedController_LeftHandle);
 
+                 // HAL_steeringControl(vehicle1handle,imu1Handle);
+
+                    /*
+                  speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+                   speedController_Left.fbValue=eqepMotorA.dir*vehicle1.speedMS*1000;
+                   speedPIcontroller(speedController_LeftHandle);
+                    */
+                //HAL_balanceControl(vehicle1handle,imu1Handle);
+               // balanceController.refInput=vehicle1.targetAngle;//Unit: Degree
+               // balanceController.fbValue=imu1.orientation.roll*MATH_R2D-2.21f;
+               // updateP_Dcontroller(balanceHandle);
+
+               motor1.dutyCycle=vehicle1.balancePWM+speedController_Left.out+vehicle1.steeringPWM;
+               motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-vehicle1.steeringPWM;
+                //filter testing code
+               // vehicle1.balancePWM=balanceController.out-vehicle1.balanceKd*imu1.GX*MATH_R2D;
+                //motor1.dutyCycle=vehicle1.balancePWM;
+                //motor2.dutyCycle=vehicle1.balancePWM*0.91f;
+
+                 //yaw rate control
+                 //steeringPID.fbValue=imu1.GZ*MATH_R2D+2.8f;
+                 //steeringPID.refInput=vehicle1.targetYawRate;
+                // updatePIDcontroller(steeringHandle);
+                //HAL_vehicleRun(motor1Handle,motor2Handle);
              //status_send(imu1.orientation.roll*MATH_R2D, imu1.orientation.pitch*MATH_R2D, imu1.orientation.yaw*MATH_R2D);
+
 
             CPUTimer_startTimer(filterTimer_BASE);
         }
@@ -268,27 +292,20 @@ __interrupt void INT_IMU_data_Ready_XINT_ISR(void)
         IMURead(IMUADDR, 0x3B, 14, imu1.dataBuffer);
         MPU_dataProcessing(imu1Handle);
         complemenaryEuler(imu1Handle);
-        if(vehicle1.status!=NORMALL)
+        if(vehicle1.status==PICKUP || FALLING==vehicle1.status)
          {
              motorSetDutyCycle(motor1Handle, 0.0f);
              motorSetDutyCycle(motor2Handle, 0.0f);
              motorSetStatus(motor1Handle,MOTOR_BRAKE);
              motorSetStatus(motor2Handle,MOTOR_BRAKE);
+             motorRun(motor1Handle);
+             motorRun(motor2Handle);
          }
-         else
-         {
-             HAL_balanceControl(vehicle1handle,imu1Handle);
-             //balanceController.refInput=vehicle1.targetAngle;//Unit: Degree
-             //balanceController.fbValue=imu1.orientation.roll*MATH_R2D-2.21f;
-            // updateP_Dcontroller(balanceHandle);
-            //motor1.dutyCycle=vehicle1.balancePWM+speedController_Right.out+steeringPID.out;
-            //motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-steeringPID.out;
-             //filter testing code
-             //vehicle1.balancePWM=balanceController.out-vehicle1.balanceKd*imu1.GX*MATH_R2D;
-             motor1.dutyCycle=vehicle1.balancePWM;
-             motor2.dutyCycle=vehicle1.balancePWM*0.91f;
-             HAL_vehicleRun(motor1Handle,motor2Handle);
-         }
+        else
+        {
+            HAL_balanceControl(vehicle1handle,imu1Handle);
+            HAL_vehicleRun(motor1Handle,motor2Handle);
+        }
       //data log functions
      // dlogChan1=vehicle1.speedMS;
      // dlogChan2=steeringPID.out;
@@ -324,6 +341,7 @@ __interrupt void INT_EQEP_motorB_ISR(void)
     vehicle1.speedMSLeft=eqepMotorB.speedMS*0.24f+vehicle1.speedMSLeft*0.76f;
     //data_print(speedRamp.setPoint,vehicle1.speedMSLeft);
     vehicle1.vehicleDirection=eqepMotorA.dir;
+    vehicle1.speedMS=(vehicle1.speedMSLeft+vehicle1.speedMSRight)*0.5f;
     //clear global flag!!
     EQEP_clearInterruptStatus(EQEP_motorB_BASE, EQEP_INT_UNIT_TIME_OUT  | EQEP_INT_GLOBAL);
     Interrupt_clearACKGroup(INT_EQEP_motorB_INTERRUPT_ACK_GROUP);

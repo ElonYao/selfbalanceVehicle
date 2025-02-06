@@ -46,6 +46,7 @@ pidHandle pidControllerInit(void *pMemory, const size_t numBytes);
 
 float updateP_Icontroller(pidHandle handle);
 float updateP_Dcontroller(pidHandle handle);
+float speedPIcontroller(pidHandle handle);
 void setKp(pidHandle handle,float kp);
 void setKi(pidHandle handle,float ki);
 void setKd(pidHandle handle,float kd);

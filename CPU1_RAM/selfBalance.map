@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v22.6.1                     
 ******************************************************************************
->> Linked Sun Feb  2 13:09:31 2025
+>> Linked Wed Feb  5 19:26:01 2025
 
 OUTPUT FILE NAME:   <selfBalance.out>
 ENTRY POINT SYMBOL: "code_start"  address: 00000000
@@ -46,7 +46,7 @@ PAGE 1:
   RAMGS2                0000e000   00001000  00000000  00001000  RWIX
   RAMGS3                0000f000   00001000  00001000  00000000  RWIX
   RAMGS4                00010000   00001000  00001000  00000000  RWIX
-  RAMGS5                00011000   00001000  000000c1  00000f3f  RWIX
+  RAMGS5                00011000   00001000  00000104  00000efc  RWIX
   RAMGS6                00012000   00001000  00000000  00001000  RWIX
   RAMGS7                00013000   00001000  00000000  00001000  RWIX
   RAMGS8                00014000   00001000  00000000  00001000  RWIX
@@ -131,106 +131,106 @@ PUTREADIDX
                   00009800    00000190     selfbalance.obj (.bss:dbuffChan4)
 
 .text.1    1    0000f000    00001000     
-                  0000f000    000003f6     board.obj (.text)
-                  0000f3f6    000003e7     hal.obj (.text)
-                  0000f7dd    0000036f     IMU6050_Elon.obj (.text)
-                  0000fb4c    00000357     device.obj (.text)
-                  0000fea3    0000011f     selfbalance.obj (.text:retain)
-                  0000ffc2    0000003e     driverlib_eabi.lib : sci.obj (.text:SCI_setConfig)
+                  0000f000    0000040e     hal.obj (.text)
+                  0000f40e    000003f6     board.obj (.text)
+                  0000f804    0000036f     IMU6050_Elon.obj (.text)
+                  0000fb73    00000357     device.obj (.text)
+                  0000feca    00000121     selfbalance.obj (.text:retain)
+                  0000ffeb    00000014     driverlib_eabi.lib : sysctl.obj (.text:CPUTimer_stopTimer)
+                  0000ffff    00000001     c2000ware_libraries.obj (.text)
 
 .text.2    1    00010000    00001000     
                   00010000    00000209     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_setClock)
-                  00010209    00000182     selfbalance.obj (.text)
-                  0001038b    000000f5     rts2800_fpu32_eabi.lib : e_asinf.c.obj (.text)
-                  00010480    000000de                            : e_sqrt.c.obj (.text)
-                  0001055e    000000cf     PID_Elon.obj (.text)
-                  0001062d    0000009c     rts2800_fpu32_eabi.lib : fd_add28.asm.obj (.text)
-                  000106c9    00000090     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_selectXTAL)
-                  00010759    00000088     rts2800_fpu32_eabi.lib : fs_div28.asm.obj (.text)
-                  000107e1    00000083                            : fd_mpy28.asm.obj (.text)
-                  00010864    00000068     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_getDeviceParametric)
-                  000108cc    00000064                        : i2c.obj (.text:I2C_initController)
-                  00010930    00000060     rts2800_fpu32_eabi.lib : s_tanf.c.obj (.text)
-                  00010990    00000052     driverlib_eabi.lib : gpio.obj (.text:GPIO_setPadConfig)
-                  000109e2    00000051                        : sysctl.obj (.text:SysCtl_getClock)
-                  00010a33    00000048                        : sysctl.obj (.text:SysCtl_selectOscSource)
-                  00010a7b    00000045                        : sci.obj (.text:SCI_clearInterruptStatus)
-                  00010ac0    00000043                        : eqep.obj (.text:EQEP_setInputPolarity)
-                  00010b03    00000041                        : sci.obj (.text:SCI_writeCharArray)
-                  00010b44    0000003d                        : interrupt.obj (.text:Interrupt_initModule)
-                  00010b81    00000037                        : gpio.obj (.text:GPIO_setControllerCore)
-                  00010bb8    00000037                        : gpio.obj (.text:GPIO_setPinConfig)
-                  00010bef    00000037                        : gpio.obj (.text:GPIO_setQualificationMode)
-                  00010c26    00000037                        : interrupt.obj (.text:Interrupt_enable)
-                  00010c5d    00000034                        : gpio.obj (.text:GPIO_setInterruptPin)
-                  00010c91    00000031                        : gpio.obj (.text:GPIO_setDirectionMode)
-                  00010cc2    00000030     rts2800_fpu32_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss)
-                  00010cf2    0000002b                            : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit)
-                  00010d1d    0000002a                            : fd_cmp28.asm.obj (.text)
-                  00010d47    00000029                            : exit.c.obj (.text)
-                  00010d70    00000028     driverlib_eabi.lib : sysctl.obj (.text:CPUTimer_selectClockSource)
-                  00010d98    00000023     rts2800_fpu32_eabi.lib : fd_tofsfpu32.asm.obj (.text)
-                  00010dbb    00000020     driverlib_eabi.lib : sci.obj (.text:SCI_isFIFOEnabled)
-                  00010ddb    0000001f                        : sysctl.obj (.text:CPUTimer_getTimerOverflowStatus)
-                  00010dfa    0000001f     DLOG_4CH_F.obj (.text)
-                  00010e19    0000001e     driverlib_eabi.lib : interrupt.obj (.text:Interrupt_initVectorTable)
-                  00010e37    0000001c     rts2800_fpu32_eabi.lib : fs_tofdfpu32.asm.obj (.text)
-                  00010e53    0000001c                            : memcpy.c.obj (.text)
-                  00010e6f    0000001b     driverlib_eabi.lib : sci.obj (.text:SCI_isBaseValid)
-                  00010e8a    0000001a                        : sysctl.obj (.text:CPUTimer_startTimer)
-                  00010ea4    0000001a                        : sci.obj (.text:SCI_isSpaceAvailableNonFIFO)
-                  00010ebe    0000001a                        : sysctl.obj (.text:SysCtl_getLowSpeedClock)
-                  00010ed8    00000018                        : sci.obj (.text:SCI_disableModule)
-                  00010ef0    00000018                        : sci.obj (.text:SCI_performSoftwareReset)
-                  00010f08    00000017                        : cputimer.obj (.text:CPUTimer_isBaseValid)
-                  00010f1f    00000017                        : sysctl.obj (.text:CPUTimer_isBaseValid)
-                  00010f36    00000017                        : eqep.obj (.text:EQEP_isBaseValid)
-                  00010f4d    00000017     rts2800_fpu32_eabi.lib : boot28.asm.obj (.text)
-                  00010f64    00000016     driverlib_eabi.lib : interrupt.obj (.text:Interrupt_defaultHandler)
-                  00010f7a    00000016                        : gpio.obj (.text:XBAR_setInputPin)
-                  00010f90    00000014                        : sysctl.obj (.text:CPUTimer_stopTimer)
-                  00010fa4    00000014                        : sci.obj (.text:SCI_getTxFIFOStatus)
-                  00010fb8    00000013                        : cputimer.obj (.text:CPUTimer_setEmulationMode)
-                  00010fcb    00000013                        : i2c.obj (.text:I2C_isBaseValid)
-                  00010fde    00000013                        : sci.obj (.text:SCI_enableModule)
-                  00010ff1    0000000f                        : sysctl.obj (.text:SysCtl_pollCpuTimer)
+                  00010209    00000199     selfbalance.obj (.text)
+                  000103a2    000000f5     rts2800_fpu32_eabi.lib : e_asinf.c.obj (.text)
+                  00010497    000000de                            : e_sqrt.c.obj (.text)
+                  00010575    000000d2     PID_Elon.obj (.text)
+                  00010647    0000009c     rts2800_fpu32_eabi.lib : fd_add28.asm.obj (.text)
+                  000106e3    00000090     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_selectXTAL)
+                  00010773    00000088     rts2800_fpu32_eabi.lib : fs_div28.asm.obj (.text)
+                  000107fb    00000083                            : fd_mpy28.asm.obj (.text)
+                  0001087e    00000068     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_getDeviceParametric)
+                  000108e6    00000064                        : i2c.obj (.text:I2C_initController)
+                  0001094a    00000060     rts2800_fpu32_eabi.lib : s_tanf.c.obj (.text)
+                  000109aa    00000052     driverlib_eabi.lib : gpio.obj (.text:GPIO_setPadConfig)
+                  000109fc    00000051                        : sysctl.obj (.text:SysCtl_getClock)
+                  00010a4d    00000048                        : sysctl.obj (.text:SysCtl_selectOscSource)
+                  00010a95    00000045                        : sci.obj (.text:SCI_clearInterruptStatus)
+                  00010ada    00000043                        : eqep.obj (.text:EQEP_setInputPolarity)
+                  00010b1d    00000041                        : sci.obj (.text:SCI_writeCharArray)
+                  00010b5e    0000003e                        : sci.obj (.text:SCI_setConfig)
+                  00010b9c    0000003d                        : interrupt.obj (.text:Interrupt_initModule)
+                  00010bd9    00000037                        : gpio.obj (.text:GPIO_setControllerCore)
+                  00010c10    00000037                        : gpio.obj (.text:GPIO_setPinConfig)
+                  00010c47    00000037                        : gpio.obj (.text:GPIO_setQualificationMode)
+                  00010c7e    00000037                        : interrupt.obj (.text:Interrupt_enable)
+                  00010cb5    00000034                        : gpio.obj (.text:GPIO_setInterruptPin)
+                  00010ce9    00000031                        : gpio.obj (.text:GPIO_setDirectionMode)
+                  00010d1a    00000030     rts2800_fpu32_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss)
+                  00010d4a    0000002b                            : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit)
+                  00010d75    0000002a                            : fd_cmp28.asm.obj (.text)
+                  00010d9f    00000029                            : exit.c.obj (.text)
+                  00010dc8    00000028     driverlib_eabi.lib : sysctl.obj (.text:CPUTimer_selectClockSource)
+                  00010df0    00000023     rts2800_fpu32_eabi.lib : fd_tofsfpu32.asm.obj (.text)
+                  00010e13    00000020     driverlib_eabi.lib : sci.obj (.text:SCI_isFIFOEnabled)
+                  00010e33    0000001f                        : sysctl.obj (.text:CPUTimer_getTimerOverflowStatus)
+                  00010e52    0000001f     DLOG_4CH_F.obj (.text)
+                  00010e71    0000001e     driverlib_eabi.lib : interrupt.obj (.text:Interrupt_initVectorTable)
+                  00010e8f    0000001c     rts2800_fpu32_eabi.lib : fs_tofdfpu32.asm.obj (.text)
+                  00010eab    0000001c                            : memcpy.c.obj (.text)
+                  00010ec7    0000001b     driverlib_eabi.lib : sci.obj (.text:SCI_isBaseValid)
+                  00010ee2    0000001a                        : sysctl.obj (.text:CPUTimer_startTimer)
+                  00010efc    0000001a                        : sci.obj (.text:SCI_isSpaceAvailableNonFIFO)
+                  00010f16    0000001a                        : sysctl.obj (.text:SysCtl_getLowSpeedClock)
+                  00010f30    00000018                        : sci.obj (.text:SCI_disableModule)
+                  00010f48    00000018                        : sci.obj (.text:SCI_performSoftwareReset)
+                  00010f60    00000017                        : cputimer.obj (.text:CPUTimer_isBaseValid)
+                  00010f77    00000017                        : sysctl.obj (.text:CPUTimer_isBaseValid)
+                  00010f8e    00000017                        : eqep.obj (.text:EQEP_isBaseValid)
+                  00010fa5    00000017     rts2800_fpu32_eabi.lib : boot28.asm.obj (.text)
+                  00010fbc    00000016     driverlib_eabi.lib : interrupt.obj (.text:Interrupt_defaultHandler)
+                  00010fd2    00000016                        : gpio.obj (.text:XBAR_setInputPin)
+                  00010fe8    00000014                        : sci.obj (.text:SCI_getTxFIFOStatus)
+                  00010ffc    00000002     rts2800_fpu32_eabi.lib : pre_init.c.obj (.text)
+                  00010ffe    00000001                            : _lock.c.obj (.text)
+                  00010fff    00000001                            : startup.c.obj (.text)
 
-.text.3    1    00011000    000000c1     
-                  00011000    00000012     driverlib_eabi.lib : sysctl.obj (.text:CPUTimer_clearOverflowFlag)
-                  00011012    00000012                        : sysctl.obj (.text:CPUTimer_disableInterrupt)
-                  00011024    00000011                        : sysctl.obj (.text:CPUTimer_setPeriod)
-                  00011035    0000000e                        : gpio.obj (.text:GPIO_isPinValid)
-                  00011043    0000000e     rts2800_fpu32_eabi.lib : fd_sub28.asm.obj (.text)
-                  00011051    0000000d     driverlib_eabi.lib : interrupt.obj (.text:Interrupt_disableGlobal)
-                  0001105e    0000000d                        : interrupt.obj (.text:Interrupt_enableGlobal)
-                  0001106b    0000000c     rts2800_fpu32_eabi.lib : args_main.c.obj (.text)
-                  00011077    0000000b     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_isMCDClockFailureDetected)
-                  00011082    0000000a                        : interrupt.obj (.text:Interrupt_illegalOperationHandler)
-                  0001108c    0000000a                        : interrupt.obj (.text:Interrupt_nmiHandler)
-                  00011096    00000009                        : sysctl.obj (.text:SysCtl_serviceWatchdog)
-                  0001109f    00000008     F2837xD_CodeStartBranch.obj (.text)
-                  000110a7    00000008     rts2800_fpu32_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none)
-                  000110af    00000007     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_resetMCD)
-                  000110b6    00000006     rts2800_fpu32_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI)
-                  000110bc    00000002                            : pre_init.c.obj (.text)
-                  000110be    00000001     c2000ware_libraries.obj (.text)
-                  000110bf    00000001     rts2800_fpu32_eabi.lib : _lock.c.obj (.text)
-                  000110c0    00000001                            : startup.c.obj (.text)
+.text.3    1    00011000    00000104     
+                  00011000    00000013     driverlib_eabi.lib : cputimer.obj (.text:CPUTimer_setEmulationMode)
+                  00011013    00000013                        : i2c.obj (.text:I2C_isBaseValid)
+                  00011026    00000013                        : sci.obj (.text:SCI_enableModule)
+                  00011039    00000012                        : sysctl.obj (.text:CPUTimer_clearOverflowFlag)
+                  0001104b    00000012                        : sysctl.obj (.text:CPUTimer_disableInterrupt)
+                  0001105d    00000011                        : sysctl.obj (.text:CPUTimer_setPeriod)
+                  0001106e    0000000f                        : sysctl.obj (.text:SysCtl_pollCpuTimer)
+                  0001107d    0000000e                        : gpio.obj (.text:GPIO_isPinValid)
+                  0001108b    0000000e     rts2800_fpu32_eabi.lib : fd_sub28.asm.obj (.text)
+                  00011099    0000000d     driverlib_eabi.lib : interrupt.obj (.text:Interrupt_disableGlobal)
+                  000110a6    0000000d                        : interrupt.obj (.text:Interrupt_enableGlobal)
+                  000110b3    0000000c     rts2800_fpu32_eabi.lib : args_main.c.obj (.text)
+                  000110bf    0000000b     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_isMCDClockFailureDetected)
+                  000110ca    0000000a                        : interrupt.obj (.text:Interrupt_illegalOperationHandler)
+                  000110d4    0000000a                        : interrupt.obj (.text:Interrupt_nmiHandler)
+                  000110de    00000009                        : sysctl.obj (.text:SysCtl_serviceWatchdog)
+                  000110e7    00000008     F2837xD_CodeStartBranch.obj (.text)
+                  000110ef    00000008     rts2800_fpu32_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none)
+                  000110f7    00000007     driverlib_eabi.lib : sysctl.obj (.text:SysCtl_resetMCD)
+                  000110fe    00000006     rts2800_fpu32_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI)
 
 MODULE SUMMARY
 
        Module                                   code   ro data   rw data
        ------                                   ----   -------   -------
     .\
-       selfbalance.obj                          673    0         2114   
+       selfbalance.obj                          698    0         2114   
     +--+----------------------------------------+------+---------+---------+
-       Total:                                   673    0         2114   
+       Total:                                   698    0         2114   
                                                                         
     .\HAL\
-       hal.obj                                  999    0         0      
+       hal.obj                                  1038   0         0      
        DLOG_4CH_F.obj                           31     0         0      
     +--+----------------------------------------+------+---------+---------+
-       Total:                                   1030   0         0      
+       Total:                                   1069   0         0      
                                                                         
     .\device\
        device.obj                               855    0         6      
@@ -239,9 +239,9 @@ MODULE SUMMARY
        Total:                                   865    0         6      
                                                                         
     .\pid\
-       PID_Elon.obj                             207    0         0      
+       PID_Elon.obj                             210    0         0      
     +--+----------------------------------------+------+---------+---------+
-       Total:                                   207    0         0      
+       Total:                                   210    0         0      
                                                                         
     .\sensorFusion\
        IMU6050_Elon.obj                         879    120       0      
@@ -255,7 +255,7 @@ MODULE SUMMARY
        Total:                                   1015   0         0      
                                                                         
     C:\Users\elony\AppData\Local\Temp\
-       {C44EA61D-A1CA-4B39-85BF-F0BA29D6A3D2}   0      220       0      
+       {47A471C3-ECF4-4388-91B4-AB01182CEFF0}   0      220       0      
     +--+----------------------------------------+------+---------+---------+
        Total:                                   0      220       0      
                                                                         
@@ -299,7 +299,7 @@ MODULE SUMMARY
        Stack:                                   0      0         256    
        Linker Generated:                        0      46        0      
     +--+----------------------------------------+------+---------+---------+
-       Grand Total:                             8391   1244      2385   
+       Grand Total:                             8458   1244      2385   
 
 
 LINKER GENERATED COPY TABLES
@@ -379,68 +379,69 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 page  address   name                                     
 ----  -------   ----                                     
-1     0000f32c  Board_init                               
-1     00010d47  C$$EXIT                                  
-1     000110be  C2000Ware_libraries_init                 
-1     00010fb8  CPUTimer_setEmulationMode                
-1     00010dfa  DLOG_4CH_F_init                          
-1     0000f2c3  Data_output_init                         
-1     0000fd32  Device_bootCPU2                          
-1     0000fbc8  Device_configureTMXAnalogTrim            
-1     0000fbfb  Device_enableAllPeripherals              
-1     0000fb8a  Device_enableUnbondedGPIOPullups         
-1     0000fb6d  Device_enableUnbondedGPIOPullupsFor100Pin
-1     0000fb5a  Device_enableUnbondedGPIOPullupsFor176Pin
-1     0000fcd9  Device_init                              
-1     0000fbaa  Device_initGPIO                          
-1     0000f0f5  EPWM_init                                
-1     0000f1b1  EQEP_motorA_init                         
-1     0000f212  EQEP_motorB_init                         
-1     00010ac0  EQEP_setInputPolarity                    
+1     0000f73a  Board_init                               
+1     00010d9f  C$$EXIT                                  
+1     0000ffff  C2000Ware_libraries_init                 
+1     00011000  CPUTimer_setEmulationMode                
+1     00010e52  DLOG_4CH_F_init                          
+1     0000f6d1  Data_output_init                         
+1     0000fd59  Device_bootCPU2                          
+1     0000fbef  Device_configureTMXAnalogTrim            
+1     0000fc22  Device_enableAllPeripherals              
+1     0000fbb1  Device_enableUnbondedGPIOPullups         
+1     0000fb94  Device_enableUnbondedGPIOPullupsFor100Pin
+1     0000fb81  Device_enableUnbondedGPIOPullupsFor176Pin
+1     0000fd00  Device_init                              
+1     0000fbd1  Device_initGPIO                          
+1     0000f503  EPWM_init                                
+1     0000f5bf  EQEP_motorA_init                         
+1     0000f620  EQEP_motorB_init                         
+1     00010ada  EQEP_setInputPolarity                    
 0     00008012  Example_Fail                             
 0     00008010  Example_PassCount                        
 0     0000800e  Example_Result                           
-1     0000fb59  Example_done                             
-1     0000fb54  Example_setResultFail                    
-1     0000fb4f  Example_setResultPass                    
-1     00010b81  GPIO_setControllerCore                   
-1     00010c91  GPIO_setDirectionMode                    
-1     00010c5d  GPIO_setInterruptPin                     
-1     00010990  GPIO_setPadConfig                        
-1     00010bb8  GPIO_setPinConfig                        
-1     00010bef  GPIO_setQualificationMode                
-1     0000f79d  HAL_balanceControl                       
-1     0000f789  HAL_fallDetection                        
-1     0000f772  HAL_hoverDetection                       
-1     0000f759  HAL_quadratureEncoderInit                
-1     0000f6e6  HAL_speedCalculation                     
-1     0000f6ae  HAL_vehicleInit                          
-1     0000f65a  HAL_vehicleRun                           
-1     000108cc  I2C_initController                       
-1     0000f7f2  IMURead                                  
-1     0000f8e0  IMUWrite                                 
-1     0000f273  IMU_6050_init                            
-1     0000ff71  INT_EQEP_motorA_ISR                      
-1     0000ff18  INT_EQEP_motorB_ISR                      
-1     0000fea3  INT_IMU_data_Ready_XINT_ISR              
-1     00010f64  Interrupt_defaultHandler                 
-1     00010c26  Interrupt_enable                         
-1     00011082  Interrupt_illegalOperationHandler        
-1     00010b44  Interrupt_initModule                     
-1     00010e19  Interrupt_initVectorTable                
-1     0001108c  Interrupt_nmiHandler                     
-1     0000faea  MPU6050init                              
-1     0000fa65  MPU_dataProcessing                       
-1     0000f000  PinMux_init                              
-1     00010a7b  SCI_clearInterruptStatus                 
-1     0000ffc2  SCI_setConfig                            
-1     00010b03  SCI_writeCharArray                       
+1     0000fb80  Example_done                             
+1     0000fb7b  Example_setResultFail                    
+1     0000fb76  Example_setResultPass                    
+1     00010bd9  GPIO_setControllerCore                   
+1     00010ce9  GPIO_setDirectionMode                    
+1     00010cb5  GPIO_setInterruptPin                     
+1     000109aa  GPIO_setPadConfig                        
+1     00010c10  GPIO_setPinConfig                        
+1     00010c47  GPIO_setQualificationMode                
+1     0000f3be  HAL_balanceControl                       
+1     0000f3aa  HAL_fallDetection                        
+1     0000f393  HAL_hoverDetection                       
+1     0000f381  HAL_proportionalSteering                 
+1     0000f368  HAL_quadratureEncoderInit                
+1     0000f2f5  HAL_speedCalculation                     
+1     0000f2b8  HAL_vehicleInit                          
+1     0000f264  HAL_vehicleRun                           
+1     000108e6  I2C_initController                       
+1     0000f819  IMURead                                  
+1     0000f907  IMUWrite                                 
+1     0000f681  IMU_6050_init                            
+1     0000ff9a  INT_EQEP_motorA_ISR                      
+1     0000ff3d  INT_EQEP_motorB_ISR                      
+1     0000feca  INT_IMU_data_Ready_XINT_ISR              
+1     00010fbc  Interrupt_defaultHandler                 
+1     00010c7e  Interrupt_enable                         
+1     000110ca  Interrupt_illegalOperationHandler        
+1     00010b9c  Interrupt_initModule                     
+1     00010e71  Interrupt_initVectorTable                
+1     000110d4  Interrupt_nmiHandler                     
+1     0000fb11  MPU6050init                              
+1     0000fa8c  MPU_dataProcessing                       
+1     0000f40e  PinMux_init                              
+1     00010a95  SCI_clearInterruptStatus                 
+1     00010b5e  SCI_setConfig                            
+1     00010b1d  SCI_writeCharArray                       
 0     00000123  SysCtl_delay                             
-1     000109e2  SysCtl_getClock                          
-1     00010864  SysCtl_getDeviceParametric               
-1     00010ebe  SysCtl_getLowSpeedClock                  
-1     00010a33  SysCtl_selectOscSource                   
-1     000106c9  SysCtl_selectXTAL                        
+1     000109fc  SysCtl_getClock                          
+1     0001087e  SysCtl_getDeviceParametric               
+1     00010f16  SysCtl_getLowSpeedClock                  
+1     00010a4d  SysCtl_selectOscSource                   
+1     000106e3  SysCtl_selectXTAL                        
 1     00010000  SysCtl_setClock                          
 0     0000014a  __TI_CINIT_Base                          
 0     00000156  __TI_CINIT_Limit                         
@@ -449,44 +450,44 @@ page  address   name
 0     00000142  __TI_Handler_Table_Limit                 
 1     00000500  __TI_STACK_END                           
 abs   00000100  __TI_STACK_SIZE                          
-1     00010cf2  __TI_auto_init_nobinit_nopinit           
+1     00010d4a  __TI_auto_init_nobinit_nopinit           
 0     00008016  __TI_cleanup_ptr                         
-1     00010cc2  __TI_decompress_lzss                     
-1     000110a7  __TI_decompress_none                     
+1     00010d1a  __TI_decompress_lzss                     
+1     000110ef  __TI_decompress_none                     
 0     00008018  __TI_dtors_ptr                           
 0     00008014  __TI_enable_exit_profile_output          
 abs   ffffffff  __TI_pprof_out_hndl                      
 abs   ffffffff  __TI_prof_data_size                      
 abs   ffffffff  __TI_prof_data_start                     
-1     000110b6  __TI_zero_init                           
-1     0001062d  __c28xabi_addd                           
-1     00010d1d  __c28xabi_cmpd                           
-1     00010759  __c28xabi_divf                           
-1     00010d98  __c28xabi_dtof                           
-1     00010e37  __c28xabi_ftod                           
-1     000107e1  __c28xabi_mpyd                           
-1     00011043  __c28xabi_subd                           
+1     000110fe  __TI_zero_init                           
+1     00010647  __c28xabi_addd                           
+1     00010d75  __c28xabi_cmpd                           
+1     00010773  __c28xabi_divf                           
+1     00010df0  __c28xabi_dtof                           
+1     00010e8f  __c28xabi_ftod                           
+1     000107fb  __c28xabi_mpyd                           
+1     0001108b  __c28xabi_subd                           
 n/a   UNDEFED   __c_args__                               
-1     0000fb4c  __error__                                
+1     0000fb73  __error__                                
 1     00000400  __stack                                  
-1     0001106b  _args_main                               
-1     00010f4d  _c_int00                                 
+1     000110b3  _args_main                               
+1     00010fa5  _c_int00                                 
 0     0000801a  _lock                                    
-1     000110bf  _nop                                     
-1     000110c0  _system_post_cinit                       
-1     000110bc  _system_pre_init                         
-1     00010d47  abort                                    
-1     0001038b  asinf                                    
+1     00010ffe  _nop                                     
+1     00010fff  _system_post_cinit                       
+1     00010ffc  _system_pre_init                         
+1     00010d9f  abort                                    
+1     000103a2  asinf                                    
 0     00009140  balanceController                        
 0     00009010  balanceHandle                            
-1     0000fa43  checkAttendence                          
+1     0000fa6a  checkAttendence                          
 0     00000000  code_start                               
-1     0000f94a  complemenaryEuler                        
+1     0000f971  complemenaryEuler                        
 0     000091f4  dbuffChan1                               
 0     00009384  dbuffChan2                               
 0     00009514  dbuffChan3                               
 0     00009800  dbuffChan4                               
-1     0000f929  deviceReset                              
+1     0000f950  deviceReset                              
 0     00009014  dlogChan1                                
 0     00009016  dlogChan2                                
 0     00009018  dlogChan3                                
@@ -497,34 +498,34 @@ n/a   UNDEFED   __c_args__
 0     0000904e  eqepMotorB                               
 0     0000900a  eqepMotorBHandle                         
 0     0000801c  errno                                    
-1     00010d49  exit                                     
-1     0000f0c4  filterTimer_init                         
-1     0000f854  getGAdata_floating                       
+1     00010da1  exit                                     
+1     0000f4d2  filterTimer_init                         
+1     0000f87b  getGAdata_floating                       
 0     000091c0  imu1                                     
 0     00009004  imu1Handle                               
 1     00010209  main                                     
-1     00010e53  memcpy                                   
+1     00010eab  memcpy                                   
 0     0000901c  motor1                                   
 0     00009000  motor1Handle                             
 0     0000902a  motor2                                   
 0     00009002  motor2Handle                             
-1     0000f480  motorInit                                
-1     0000f488  motorRun                                 
-1     0000f3f8  motorSetDutyCycle                        
-1     0000f3f6  motorSetStatus                           
-1     000105a5  pidControllerInit                        
-1     0000f7dd  setOffset                                
+1     0000f25c  motorInit                                
+1     0000f08a  motorRun                                 
+1     0000f002  motorSetDutyCycle                        
+1     0000f000  motorSetStatus                           
+1     000105c3  pidControllerInit                        
+1     0000f804  setOffset                                
 0     00009100  speedController_Left                     
 0     0000900e  speedController_LeftHandle               
 0     000090c0  speedController_Right                    
 0     0000900c  speedController_RightHandle              
+1     00010575  speedPIcontroller                        
 0     00008000  speedRamp                                
-1     00010480  sqrt                                     
-1     00010480  sqrtl                                    
+1     00010497  sqrt                                     
+1     00010497  sqrtl                                    
 0     00009012  steeringHandle                           
 0     00009180  steeringPID                              
-1     00010930  tanf                                     
-1     0001055e  updateP_Icontroller                      
+1     0001094a  tanf                                     
 0     00009080  vehicle1                                 
 0     00009006  vehicle1handle                           
 
@@ -580,106 +581,107 @@ page  address   name
 0     00009800  dbuffChan4                               
 1     00000400  __stack                                  
 1     00000500  __TI_STACK_END                           
-1     0000f000  PinMux_init                              
-1     0000f0c4  filterTimer_init                         
-1     0000f0f5  EPWM_init                                
-1     0000f1b1  EQEP_motorA_init                         
-1     0000f212  EQEP_motorB_init                         
-1     0000f273  IMU_6050_init                            
-1     0000f2c3  Data_output_init                         
-1     0000f32c  Board_init                               
-1     0000f3f6  motorSetStatus                           
-1     0000f3f8  motorSetDutyCycle                        
-1     0000f480  motorInit                                
-1     0000f488  motorRun                                 
-1     0000f65a  HAL_vehicleRun                           
-1     0000f6ae  HAL_vehicleInit                          
-1     0000f6e6  HAL_speedCalculation                     
-1     0000f759  HAL_quadratureEncoderInit                
-1     0000f772  HAL_hoverDetection                       
-1     0000f789  HAL_fallDetection                        
-1     0000f79d  HAL_balanceControl                       
-1     0000f7dd  setOffset                                
-1     0000f7f2  IMURead                                  
-1     0000f854  getGAdata_floating                       
-1     0000f8e0  IMUWrite                                 
-1     0000f929  deviceReset                              
-1     0000f94a  complemenaryEuler                        
-1     0000fa43  checkAttendence                          
-1     0000fa65  MPU_dataProcessing                       
-1     0000faea  MPU6050init                              
-1     0000fb4c  __error__                                
-1     0000fb4f  Example_setResultPass                    
-1     0000fb54  Example_setResultFail                    
-1     0000fb59  Example_done                             
-1     0000fb5a  Device_enableUnbondedGPIOPullupsFor176Pin
-1     0000fb6d  Device_enableUnbondedGPIOPullupsFor100Pin
-1     0000fb8a  Device_enableUnbondedGPIOPullups         
-1     0000fbaa  Device_initGPIO                          
-1     0000fbc8  Device_configureTMXAnalogTrim            
-1     0000fbfb  Device_enableAllPeripherals              
-1     0000fcd9  Device_init                              
-1     0000fd32  Device_bootCPU2                          
-1     0000fea3  INT_IMU_data_Ready_XINT_ISR              
-1     0000ff18  INT_EQEP_motorB_ISR                      
-1     0000ff71  INT_EQEP_motorA_ISR                      
-1     0000ffc2  SCI_setConfig                            
+1     0000f000  motorSetStatus                           
+1     0000f002  motorSetDutyCycle                        
+1     0000f08a  motorRun                                 
+1     0000f25c  motorInit                                
+1     0000f264  HAL_vehicleRun                           
+1     0000f2b8  HAL_vehicleInit                          
+1     0000f2f5  HAL_speedCalculation                     
+1     0000f368  HAL_quadratureEncoderInit                
+1     0000f381  HAL_proportionalSteering                 
+1     0000f393  HAL_hoverDetection                       
+1     0000f3aa  HAL_fallDetection                        
+1     0000f3be  HAL_balanceControl                       
+1     0000f40e  PinMux_init                              
+1     0000f4d2  filterTimer_init                         
+1     0000f503  EPWM_init                                
+1     0000f5bf  EQEP_motorA_init                         
+1     0000f620  EQEP_motorB_init                         
+1     0000f681  IMU_6050_init                            
+1     0000f6d1  Data_output_init                         
+1     0000f73a  Board_init                               
+1     0000f804  setOffset                                
+1     0000f819  IMURead                                  
+1     0000f87b  getGAdata_floating                       
+1     0000f907  IMUWrite                                 
+1     0000f950  deviceReset                              
+1     0000f971  complemenaryEuler                        
+1     0000fa6a  checkAttendence                          
+1     0000fa8c  MPU_dataProcessing                       
+1     0000fb11  MPU6050init                              
+1     0000fb73  __error__                                
+1     0000fb76  Example_setResultPass                    
+1     0000fb7b  Example_setResultFail                    
+1     0000fb80  Example_done                             
+1     0000fb81  Device_enableUnbondedGPIOPullupsFor176Pin
+1     0000fb94  Device_enableUnbondedGPIOPullupsFor100Pin
+1     0000fbb1  Device_enableUnbondedGPIOPullups         
+1     0000fbd1  Device_initGPIO                          
+1     0000fbef  Device_configureTMXAnalogTrim            
+1     0000fc22  Device_enableAllPeripherals              
+1     0000fd00  Device_init                              
+1     0000fd59  Device_bootCPU2                          
+1     0000feca  INT_IMU_data_Ready_XINT_ISR              
+1     0000ff3d  INT_EQEP_motorB_ISR                      
+1     0000ff9a  INT_EQEP_motorA_ISR                      
+1     0000ffff  C2000Ware_libraries_init                 
 1     00010000  SysCtl_setClock                          
 1     00010209  main                                     
-1     0001038b  asinf                                    
-1     00010480  sqrt                                     
-1     00010480  sqrtl                                    
-1     0001055e  updateP_Icontroller                      
-1     000105a5  pidControllerInit                        
-1     0001062d  __c28xabi_addd                           
-1     000106c9  SysCtl_selectXTAL                        
-1     00010759  __c28xabi_divf                           
-1     000107e1  __c28xabi_mpyd                           
-1     00010864  SysCtl_getDeviceParametric               
-1     000108cc  I2C_initController                       
-1     00010930  tanf                                     
-1     00010990  GPIO_setPadConfig                        
-1     000109e2  SysCtl_getClock                          
-1     00010a33  SysCtl_selectOscSource                   
-1     00010a7b  SCI_clearInterruptStatus                 
-1     00010ac0  EQEP_setInputPolarity                    
-1     00010b03  SCI_writeCharArray                       
-1     00010b44  Interrupt_initModule                     
-1     00010b81  GPIO_setControllerCore                   
-1     00010bb8  GPIO_setPinConfig                        
-1     00010bef  GPIO_setQualificationMode                
-1     00010c26  Interrupt_enable                         
-1     00010c5d  GPIO_setInterruptPin                     
-1     00010c91  GPIO_setDirectionMode                    
-1     00010cc2  __TI_decompress_lzss                     
-1     00010cf2  __TI_auto_init_nobinit_nopinit           
-1     00010d1d  __c28xabi_cmpd                           
-1     00010d47  C$$EXIT                                  
-1     00010d47  abort                                    
-1     00010d49  exit                                     
-1     00010d98  __c28xabi_dtof                           
-1     00010dfa  DLOG_4CH_F_init                          
-1     00010e19  Interrupt_initVectorTable                
-1     00010e37  __c28xabi_ftod                           
-1     00010e53  memcpy                                   
-1     00010ebe  SysCtl_getLowSpeedClock                  
-1     00010f4d  _c_int00                                 
-1     00010f64  Interrupt_defaultHandler                 
-1     00010fb8  CPUTimer_setEmulationMode                
-1     00011043  __c28xabi_subd                           
-1     0001106b  _args_main                               
-1     00011082  Interrupt_illegalOperationHandler        
-1     0001108c  Interrupt_nmiHandler                     
-1     000110a7  __TI_decompress_none                     
-1     000110b6  __TI_zero_init                           
-1     000110bc  _system_pre_init                         
-1     000110be  C2000Ware_libraries_init                 
-1     000110bf  _nop                                     
-1     000110c0  _system_post_cinit                       
+1     000103a2  asinf                                    
+1     00010497  sqrt                                     
+1     00010497  sqrtl                                    
+1     00010575  speedPIcontroller                        
+1     000105c3  pidControllerInit                        
+1     00010647  __c28xabi_addd                           
+1     000106e3  SysCtl_selectXTAL                        
+1     00010773  __c28xabi_divf                           
+1     000107fb  __c28xabi_mpyd                           
+1     0001087e  SysCtl_getDeviceParametric               
+1     000108e6  I2C_initController                       
+1     0001094a  tanf                                     
+1     000109aa  GPIO_setPadConfig                        
+1     000109fc  SysCtl_getClock                          
+1     00010a4d  SysCtl_selectOscSource                   
+1     00010a95  SCI_clearInterruptStatus                 
+1     00010ada  EQEP_setInputPolarity                    
+1     00010b1d  SCI_writeCharArray                       
+1     00010b5e  SCI_setConfig                            
+1     00010b9c  Interrupt_initModule                     
+1     00010bd9  GPIO_setControllerCore                   
+1     00010c10  GPIO_setPinConfig                        
+1     00010c47  GPIO_setQualificationMode                
+1     00010c7e  Interrupt_enable                         
+1     00010cb5  GPIO_setInterruptPin                     
+1     00010ce9  GPIO_setDirectionMode                    
+1     00010d1a  __TI_decompress_lzss                     
+1     00010d4a  __TI_auto_init_nobinit_nopinit           
+1     00010d75  __c28xabi_cmpd                           
+1     00010d9f  C$$EXIT                                  
+1     00010d9f  abort                                    
+1     00010da1  exit                                     
+1     00010df0  __c28xabi_dtof                           
+1     00010e52  DLOG_4CH_F_init                          
+1     00010e71  Interrupt_initVectorTable                
+1     00010e8f  __c28xabi_ftod                           
+1     00010eab  memcpy                                   
+1     00010f16  SysCtl_getLowSpeedClock                  
+1     00010fa5  _c_int00                                 
+1     00010fbc  Interrupt_defaultHandler                 
+1     00010ffc  _system_pre_init                         
+1     00010ffe  _nop                                     
+1     00010fff  _system_post_cinit                       
+1     00011000  CPUTimer_setEmulationMode                
+1     0001108b  __c28xabi_subd                           
+1     000110b3  _args_main                               
+1     000110ca  Interrupt_illegalOperationHandler        
+1     000110d4  Interrupt_nmiHandler                     
+1     000110ef  __TI_decompress_none                     
+1     000110fe  __TI_zero_init                           
 abs   00000100  __TI_STACK_SIZE                          
 abs   ffffffff  __TI_pprof_out_hndl                      
 abs   ffffffff  __TI_prof_data_size                      
 abs   ffffffff  __TI_prof_data_start                     
 n/a   UNDEFED   __c_args__                               
 
-[148 symbols]
+[149 symbols]

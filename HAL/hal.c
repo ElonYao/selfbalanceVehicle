@@ -25,8 +25,8 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     handle = (vehicleHandle)memory;
     obj = (vehicle_t *)handle;
     obj->status = NORMALL;
-    obj->balanceKp=100.0f;
-    obj->balanceKd=28.0f;
+    obj->balanceKp=700.0f;
+    obj->balanceKd=160.3f;
     obj->outMax=4750.0f;
     obj->outMin=-4750.0f;
     obj->targetAngle=0.50f;
@@ -36,6 +36,7 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     obj->targetYawRate=0.0f;//unit:deg/s
     obj->speedMSLeft=0.0f;
     obj->speedMSRight=0.0f;
+    obj->flag_turning=0;//left -1 right 1
     return handle;
 }
 quadratureHandle HAL_quadratureEncoderInit(void *memory,const size_t memorySize)
@@ -100,7 +101,7 @@ void HAL_balanceControl(vehicleHandle vehiclehandle,IMUHandle imuhandle)
     float32_t result=0.0f;
     //subtract mechanical zero point roll angle and angular speed offset
     obj_V->fbAngle=obj_IMU->orientation.roll*MATH_R2D-2.21f;
-    result=(obj_V->targetAngle-obj_V->fbAngle)*obj_V->balanceKp+obj_V->balanceKd*(0-obj_IMU->GX*MATH_R2D);
+    result=(obj_V->targetAngle-obj_V->fbAngle)*0.1*obj_V->balanceKp+obj_V->balanceKd*(0-obj_IMU->GX*MATH_R2D)*0.1;
     obj_V->balancePWM=_constrain(result,obj_V->outMin,obj_V->outMax);
 
 }
@@ -108,12 +109,30 @@ void HAL_steeringControl(vehicleHandle vehiclehandle,IMUHandle imuhandle)
 {
     vehicle_t *obj_V= (vehicle_t *)vehiclehandle;
     MPU6050_T *obj_IMU=( MPU6050_T *) imuhandle;
-    float result=0;
+    float result=0,error=0;
     obj_V->fbYawRate=obj_IMU->GZ*MATH_R2D;
-    obj_V->error=obj_V->targetYawRate-obj_V->fbYawRate;
-    result=obj_V->steeringPWM+obj_V->error*obj_V->steeringKp+obj_V->steeringKd*(obj_V->error-obj_V->lastError);
+    error=obj_V->targetYawRate-obj_V->fbYawRate;
+    result=error*obj_V->steeringKp+obj_V->steeringKd*(error-obj_V->lastError);
+    obj_V->lastError=error;
     obj_V->steeringPWM=_constrain(result,obj_V->outMin,obj_V->outMax);
 
+}
+
+void HAL_proportionalSteering(vehicleHandle vehiclehandle)
+{
+    vehicle_t *obj= (vehicle_t *)vehiclehandle;
+    if(obj->flag_turning==-1)
+    {
+        obj->steeringPWM=TURNINGPWMDEF;
+    }
+    else if(obj->flag_turning==1)
+    {
+        obj->steeringPWM=-TURNINGPWMDEF;
+    }
+    else
+    {
+        obj->steeringPWM=0;
+    }
 }
 void HAL_fallDetection(vehicleHandle vehiclehandle,IMUHandle imuhandle)
 {

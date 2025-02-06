@@ -79,35 +79,10 @@ void IMUWrite(uint16_t addrSlave,uint16_t addrRegs,uint16_t dataLen ,uint16_t *d
             while(!(I2C_getStatus(IMU_6050_BASE) & I2C_STS_TX_DATA_RDY));
                 I2C_putData(IMU_6050_BASE,*dataBuffer++);
 
-
-
-
-
             }
         I2C_sendStopCondition(IMU_6050_BASE);//stop
 }
-/*
-uint16_t IMUWrite_2(uint16_t addrSlave,uint16_t addrRegs,uint16_t dataLen ,uint16_t *dataBuffer)
-{
-    uint16_t index=0;
-    I2C_setTargetAddress(IMU_6050_BASE,addrSlave);
-    I2C_setDataCount(IMU_6050_BASE, dataLen);
-    for(index=0;index<dataLen;index++)
-    {
-        I2C_putData(IMU_6050_BASE,*(dataBuffer+index));
-    }
-    I2C_setConfig(IMU_6050_BASE,I2C_CONTROLLER_SEND_MODE);
-    I2C_sendStartCondition(IMU_6050_BASE);
-    I2C_sendStopCondition(IMU_6050_BASE);//stop
-}
 
-uint16_t IMURead(uint16_t addrSlave,uint16_t addrRegs,uint16_t dataLen ,uint16_t *dataBuffer)
-{
-    uint16_t index=0;
-    I2C_setTargetAddress(IMU_6050_BASE,addrSlave);
-
-}
-*/
 IMUHandle MPU6050init(void *memory,const size_t memorySize)
 {
     IMUHandle handle;
@@ -372,11 +347,11 @@ void calibration(IMUHandle handle)
 void setOffset(IMUHandle handle)
 {
     MPU6050_T *obj=( MPU6050_T *) handle;
-    obj->offsetAX=-75;
-    obj->offsetAY= 394;
+    obj->offsetAX=-84;
+    obj->offsetAY= 418;
     obj->offsetAZ= 397;
-    obj->offsetGX=133;
-    obj->offsetGY=-145;
+    obj->offsetGX=128;
+    obj->offsetGY=-153;
     obj->offsetGZ=122;
 }
 

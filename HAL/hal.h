@@ -14,7 +14,7 @@ extern "C" {
 #define _constrain(amt,min,high)  ((amt>high)? high : ((amt<min)? min : amt))
 #define WHEELRPM_SF 0.00048828f // 60/(1024*4*30)
 #define WHEELMS_SF 2.0453e-6f // pi*0.08/(1024*4*30)
-
+#define TURNINGPWMDEF 250
 typedef enum
 {
     FALLING=0,
@@ -52,7 +52,7 @@ typedef struct _vehicle_
     float32_t steeringKd;
     float32_t steeringPWM;
     float32_t lastError;
-    float32_t error;
+    int16_t flag_turning;
 
 }vehicle_t;
 
@@ -109,6 +109,7 @@ void HAL_fallDetection(vehicleHandle vehiclehandle,IMUHandle imuhandle);
 void HAL_hoverDetection(vehicleHandle vehiclehandle,IMUHandle imuhandle);
 void HAL_balanceControl(vehicleHandle vehiclehandle,IMUHandle imuhandle);
 void HAL_steeringControl(vehicleHandle vehiclehandle,IMUHandle imuhandle);
+void HAL_proportionalSteering(vehicleHandle vehiclehandle);
 void HAL_vehicleRun(motorHandle handle1,motorHandle handle2);
 quadratureHandle HAL_quadratureEncoderInit(void *memory,const size_t memorySize);
 void HAL_speedCalculation(quadratureHandle handle);
