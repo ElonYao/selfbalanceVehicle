@@ -52,7 +52,6 @@ void status_send(float roll,float pitch,float yaw)
     {
         UART1ByteWrite(dataBuffer[index]);
     }
-
 }
 void data_send(MPU6050_T *sensor)
 {

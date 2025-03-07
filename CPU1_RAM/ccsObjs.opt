@@ -2,6 +2,7 @@
 "./syscfg/c2000ware_libraries.obj"
 "./selfbalance.obj"
 "./HAL/DLOG_4CH_F.obj"
+"./HAL/comm_Elon.obj"
 "./HAL/hal.obj"
 "./device/F2837xD_CodeStartBranch.obj"
 "./device/device.obj"

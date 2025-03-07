@@ -59,6 +59,22 @@ extern "C"
 //*****************************************************************************
 
 //
+// CANB -> mainCAN Pinmux
+//
+//
+// CANRXB - GPIO Settings
+//
+#define GPIO_PIN_CANRXB 17
+#define mainCAN_CANRX_GPIO 17
+#define mainCAN_CANRX_PIN_CONFIG GPIO_17_CANRXB
+//
+// CANTXB - GPIO Settings
+//
+#define GPIO_PIN_CANTXB 12
+#define mainCAN_CANTX_GPIO 12
+#define mainCAN_CANTX_PIN_CONFIG GPIO_12_CANTXB
+
+//
 // EPWM6 -> MotorControl Pinmux
 //
 //
@@ -126,10 +142,6 @@ extern "C"
 //
 #define A2_GPIO_PIN_CONFIG GPIO_15_GPIO15
 //
-// GPIO22 - GPIO Settings
-//
-#define IMU_data_Ready_GPIO_PIN_CONFIG GPIO_22_GPIO22
-//
 // GPIO27 - GPIO Settings
 //
 #define B1_GPIO_PIN_CONFIG GPIO_27_GPIO27
@@ -170,13 +182,42 @@ extern "C"
 #define Data_output_SCITX_GPIO 42
 #define Data_output_SCITX_PIN_CONFIG GPIO_42_SCITXDA
 
+//
+// SCIB -> BL_PIC Pinmux
+//
+//
+// SCIRXDB - GPIO Settings
+//
+#define GPIO_PIN_SCIRXDB 19
+#define BL_PIC_SCIRX_GPIO 19
+#define BL_PIC_SCIRX_PIN_CONFIG GPIO_19_SCIRXDB
+//
+// SCITXDB - GPIO Settings
+//
+#define GPIO_PIN_SCITXDB 18
+#define BL_PIC_SCITX_GPIO 18
+#define BL_PIC_SCITX_PIN_CONFIG GPIO_18_SCITXDB
+
+//*****************************************************************************
+//
+// CAN Configurations
+//
+//*****************************************************************************
+#define mainCAN_BASE CANB_BASE
+
+#define mainCAN_MessageObj1_ID 201391869
+#define mainCAN_MessageObj2_ID 217060350
+#define mainCAN_MessageObj3_ID 217056510
+void mainCAN_init();
+
+
 //*****************************************************************************
 //
 // CPUTIMER Configurations
 //
 //*****************************************************************************
-#define filterTimer_BASE CPUTIMER0_BASE
-void filterTimer_init();
+#define mainController_BASE CPUTIMER0_BASE
+void mainController_init();
 
 //*****************************************************************************
 //
@@ -217,8 +258,6 @@ void EQEP_motorB_init();
 void A1_init();
 #define A2 15
 void A2_init();
-#define IMU_data_Ready 22
-void IMU_data_Ready_init();
 #define B1 27
 void B1_init();
 #define B2 25
@@ -238,36 +277,21 @@ void IMU_6050_init();
 
 //*****************************************************************************
 //
-// INPUTXBAR Configurations
-//
-//*****************************************************************************
-#define myINPUTXBARINPUT0_SOURCE 22
-#define myINPUTXBARINPUT0_INPUT XBAR_INPUT4
-void myINPUTXBARINPUT0_init();
-
-//*****************************************************************************
-//
 // INTERRUPT Configurations
 //
 //*****************************************************************************
 
-// Interrupt Settings for INT_EQEP_motorA
+// Interrupt Settings for INT_mainController
 // ISR need to be defined for the registered interrupts
-#define INT_EQEP_motorA INT_EQEP1
-#define INT_EQEP_motorA_INTERRUPT_ACK_GROUP INTERRUPT_ACK_GROUP5
-extern __interrupt void INT_EQEP_motorA_ISR(void);
+#define INT_mainController INT_TIMER0
+#define INT_mainController_INTERRUPT_ACK_GROUP INTERRUPT_ACK_GROUP1
+extern __interrupt void INT_mainController_ISR(void);
 
-// Interrupt Settings for INT_EQEP_motorB
+// Interrupt Settings for INT_BL_PIC_RX
 // ISR need to be defined for the registered interrupts
-#define INT_EQEP_motorB INT_EQEP2
-#define INT_EQEP_motorB_INTERRUPT_ACK_GROUP INTERRUPT_ACK_GROUP5
-extern __interrupt void INT_EQEP_motorB_ISR(void);
-
-// Interrupt Settings for INT_IMU_data_Ready_XINT
-// ISR need to be defined for the registered interrupts
-#define INT_IMU_data_Ready_XINT INT_XINT1
-#define INT_IMU_data_Ready_XINT_INTERRUPT_ACK_GROUP INTERRUPT_ACK_GROUP1
-extern __interrupt void INT_IMU_data_Ready_XINT_ISR(void);
+#define INT_BL_PIC_RX INT_SCIB_RX
+#define INT_BL_PIC_RX_INTERRUPT_ACK_GROUP INTERRUPT_ACK_GROUP9
+extern __interrupt void INT_BL_PIC_RX_ISR(void);
 
 //*****************************************************************************
 //
@@ -280,6 +304,14 @@ extern __interrupt void INT_IMU_data_Ready_XINT_ISR(void);
 #define Data_output_CONFIG_STOP SCI_CONFIG_STOP_ONE
 #define Data_output_CONFIG_PAR SCI_CONFIG_PAR_NONE
 void Data_output_init();
+#define BL_PIC_BASE SCIB_BASE
+#define BL_PIC_BAUDRATE 9600
+#define BL_PIC_CONFIG_WLEN SCI_CONFIG_WLEN_8
+#define BL_PIC_CONFIG_STOP SCI_CONFIG_STOP_ONE
+#define BL_PIC_CONFIG_PAR SCI_CONFIG_PAR_NONE
+#define BL_PIC_FIFO_TX_LVL SCI_FIFO_TX0
+#define BL_PIC_FIFO_RX_LVL SCI_FIFO_RX8
+void BL_PIC_init();
 
 //*****************************************************************************
 //
@@ -289,29 +321,19 @@ void Data_output_init();
 
 //*****************************************************************************
 //
-// XINT Configurations
-//
-//*****************************************************************************
-#define IMU_data_Ready_XINT GPIO_INT_XINT1
-#define IMU_data_Ready_XINT_TYPE GPIO_INT_TYPE_RISING_EDGE
-void IMU_data_Ready_XINT_init();
-
-//*****************************************************************************
-//
 // Board Configurations
 //
 //*****************************************************************************
 void	Board_init();
+void	CAN_init();
 void	CPUTIMER_init();
 void	EPWM_init();
 void	EQEP_init();
 void	GPIO_init();
 void	I2C_init();
-void	INPUTXBAR_init();
 void	INTERRUPT_init();
 void	SCI_init();
 void	SYNC_init();
-void	XINT_init();
 void	PinMux_init();
 
 //*****************************************************************************

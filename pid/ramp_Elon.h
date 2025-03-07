@@ -15,7 +15,7 @@ typedef struct { float    targetValue; 	// Input: Target input
 
 
 #define RAMPCTL_DEFAULTS {  0.0f, 		 \
-                            0.0025f,/*maxAccel_mpss *ctrlPeriod_sec*/	 \
+                            0.00125f,/*maxAccel_mpss *ctrlPeriod_sec*/	 \
                            -0.5f, \
                            0.5f, \
                             0.0f, \

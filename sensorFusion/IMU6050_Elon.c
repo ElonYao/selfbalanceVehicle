@@ -102,7 +102,7 @@ IMUHandle MPU6050init(void *memory,const size_t memorySize)
 	obj->orientation.pitch=0.0f;
 	obj->orientation.roll=0.0f;
 	obj->orientation.yaw=0.0f;
-	obj->CMfilter_alpha=0.03f;
+	obj->CMfilter_alpha=0.02f;
 	//obj->dataBuffer={0};
     deviceReset();
     temp=0x01;//sleep off and use x gyro as clock source
@@ -115,8 +115,10 @@ IMUHandle MPU6050init(void *memory,const size_t memorySize)
     IMUWrite(IMUADDR,0x1C,1,&temp);
     temp=0x10 ;//INT_PIN_CFG
     IMUWrite(IMUADDR,0x37,1,&temp);
+    /*
     temp=0x01;//Interrupt enable
     IMUWrite(IMUADDR,0x38,1,&temp);
+    */
     return handle;
 }
 void checkAttendence(void)
@@ -369,9 +371,9 @@ void complemenaryEuler(IMUHandle handle)
     pitchEstimate_dot=obj->GY*cosf(rollEstimate)-obj->GZ*sinf(rollEstimate);
     yawEstimate_dot=(obj->GY*sinf(rollEstimate)+obj->GZ*cosf(rollEstimate))/cosf(pitchEstimate);
     //combination
-    rollEstimate=atanf(obj->AY/obj->AZ)*obj->CMfilter_alpha+(1-obj->CMfilter_alpha)*(rollEstimate+rollEstimate_dot*0.0015f);
-    pitchEstimate=asinf(obj->AX/9.8f)*obj->CMfilter_alpha+(1-obj->CMfilter_alpha)*(pitchEstimate+pitchEstimate_dot*0.0015f);
-    yawEstimate+=yawEstimate_dot*0.0015;
+    rollEstimate=atanf(obj->AY/obj->AZ)*obj->CMfilter_alpha+(1-obj->CMfilter_alpha)*(rollEstimate+rollEstimate_dot*0.005f);
+    pitchEstimate=asinf(obj->AX/9.8f)*obj->CMfilter_alpha+(1-obj->CMfilter_alpha)*(pitchEstimate+pitchEstimate_dot*0.005f);
+    yawEstimate+=yawEstimate_dot*0.005f;
     obj->orientation.roll=rollEstimate;
     obj->orientation.pitch=pitchEstimate;
     obj->orientation.yaw=yawEstimate;

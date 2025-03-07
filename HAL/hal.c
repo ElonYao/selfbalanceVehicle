@@ -25,8 +25,8 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     handle = (vehicleHandle)memory;
     obj = (vehicle_t *)handle;
     obj->status = NORMALL;
-    obj->balanceKp=700.0f;
-    obj->balanceKd=160.3f;
+    obj->balanceKp=1330.0f;
+    obj->balanceKd=147.5f;
     obj->outMax=4750.0f;
     obj->outMin=-4750.0f;
     obj->targetAngle=0.50f;
@@ -37,6 +37,7 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     obj->speedMSLeft=0.0f;
     obj->speedMSRight=0.0f;
     obj->flag_turning=0;//left -1 right 1
+    obj->batteryVolt=0.0f;
     return handle;
 }
 quadratureHandle HAL_quadratureEncoderInit(void *memory,const size_t memorySize)
@@ -50,7 +51,7 @@ quadratureHandle HAL_quadratureEncoderInit(void *memory,const size_t memorySize)
     }
     handle = (quadratureHandle)memory;
     obj = (quadratureEncoder_t *)handle;
-    obj->unitTimerFreq=100;
+    obj->unitTimerFreq=200;
     obj->dir=0;
     obj->freq=0;
     obj->preCounter=0;
@@ -63,34 +64,37 @@ void HAL_speedCalculation(quadratureHandle handle)
 {
     quadratureEncoder_t *obj=(quadratureEncoder_t *)handle;
     uint32_t temp=0,newCounter=0;
+    if((EQEP_getInterruptStatus(obj->eqepBase) & EQEP_INT_UNIT_TIME_OUT)!=0)
+     {
+        newCounter=EQEP_getPositionLatch(obj->eqepBase);
+        temp=newCounter;
 
-    newCounter=EQEP_getPositionLatch(obj->eqepBase);
-    temp=newCounter;
+        obj->dir=EQEP_getDirection(obj->eqepBase);
 
-    obj->dir=EQEP_getDirection(obj->eqepBase);
+        // Calculate the delta counts in unit timer  5ms
 
-    // Calculate the delta counts in unit timer  10ms
-
-    if(obj->dir>0)
-    {
-        if(newCounter>=obj->preCounter)
-            newCounter-=obj->preCounter;
+        if(obj->dir>0)
+        {
+            if(newCounter>=obj->preCounter)
+                newCounter-=obj->preCounter;
+            else
+                newCounter+=0xFFFFFFFF-obj->preCounter;
+        }
         else
-            newCounter+=0xFFFFFFFF-obj->preCounter;
-    }
-    else
-    {
-        if(newCounter<=obj->preCounter)
-            newCounter=obj->preCounter-newCounter;
-        else
-            newCounter=(0xFFFFFFFF-newCounter)+obj->preCounter;
-    }
+        {
+            if(newCounter<=obj->preCounter)
+                newCounter=obj->preCounter-newCounter;
+            else
+                newCounter=(0xFFFFFFFF-newCounter)+obj->preCounter;
+        }
 
-    obj->preCounter=temp;
+        obj->preCounter=temp;
 
-    obj->freq=newCounter*obj->unitTimerFreq;
-    obj->speedRPM=WHEELRPM_SF*obj->freq;
-    obj->speedMS=WHEELMS_SF*obj->freq;
+        obj->freq=newCounter*obj->unitTimerFreq;
+        obj->speedRPM=WHEELRPM_SF*obj->freq;
+        obj->speedMS=WHEELMS_SF*obj->freq;
+        EQEP_clearInterruptStatus(obj->eqepBase, EQEP_INT_UNIT_TIME_OUT);
+     }
 
 
 }
@@ -123,11 +127,11 @@ void HAL_proportionalSteering(vehicleHandle vehiclehandle)
     vehicle_t *obj= (vehicle_t *)vehiclehandle;
     if(obj->flag_turning==-1)
     {
-        obj->steeringPWM=TURNINGPWMDEF;
+        obj->steeringPWM=TURNINGPWMDEF;//left turn
     }
     else if(obj->flag_turning==1)
     {
-        obj->steeringPWM=-TURNINGPWMDEF;
+        obj->steeringPWM=-TURNINGPWMDEF;//right turn
     }
     else
     {

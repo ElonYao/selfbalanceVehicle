@@ -54,6 +54,8 @@ typedef struct _vehicle_
     float32_t lastError;
     int16_t flag_turning;
 
+    float32_t batteryVolt;
+
 }vehicle_t;
 
 typedef enum

@@ -55,9 +55,10 @@
 #include "flightmointor.h"
 #include "IMU6050_Elon.h"
 #include "PID_Elon.h"
-#include "PID_ElonM.h"
+//#include "PID_ElonM.h"
 #include "ramp_Elon.h"
-#include "DLOG_4CH_F.h"
+//#include "DLOG_4CH_F.h"
+#include "comm_Elon.h"
 
 #ifdef _FLASH
 #pragma CODE_SECTION(INT_IMU_data_Ready_XINT_ISR, ".TI.ramfunc");
@@ -98,26 +99,11 @@ pidHandle speedController_RightHandle;
 PIDController_t speedController_Left;
 pidHandle speedController_LeftHandle;
 
-//balance controller
-PIDController_t balanceController;
-pidHandle balanceHandle;
+can_t can1;
+canHandle CANHandle;
 
-PIDController_t steeringPID;
-pidHandle steeringHandle;
-
-
-
-// Data log for debugging
-float dbuffChan1[200],
-      dbuffChan2[200],
-      dbuffChan3[200],
-      dbuffChan4[200],
-      dlogChan1,
-      dlogChan2,
-      dlogChan3,
-      dlogChan4;
-DLOG_4CH_F dlog_4ch1;
-
+serialCMD usartB;
+cmdHandle usartHandle;
 //
 // Main
 //
@@ -156,32 +142,20 @@ void main(void)
     //
     C2000Ware_libraries_init();
 
-    //data log setting
-    DLOG_4CH_F_init(&dlog_4ch1);
-    dlog_4ch1.input_ptr1=&dlogChan1;
-    dlog_4ch1.input_ptr2=&dlogChan2;
-    dlog_4ch1.input_ptr3=&dlogChan3;
-    dlog_4ch1.input_ptr4=&dlogChan4;
-
-    dlog_4ch1.output_ptr1=dbuffChan1;
-    dlog_4ch1.output_ptr2=dbuffChan2;
-    dlog_4ch1.output_ptr3=dbuffChan3;
-    dlog_4ch1.output_ptr4=dbuffChan4;
+    //CAN interrupt
+    // Interrupt Settings for INT_mainCAN_0
+    // ISR need to be defined for the registered interrupts
+    Interrupt_register(INT_CANB0, &INT_mainCAN_ISR);
+    Interrupt_enable(INT_CANB0);
 
 
-    dlog_4ch1.size=200;
-    dlog_4ch1.pre_scalar=7;// determined how long the buffer size points can represent
-    dlog_4ch1.trig_value=0.01;
-    dlog_4ch1.status=2;
-
-
-    //motor1 parameter setting
+    //motor1 parameter setting(right)
     motor1.ID=MOTORA;
     motor1.inputPin1=A1;
     motor1.inputPin2=A2;
     motor1.pwmBase=MotorControl_BASE;
     motor1Handle=motorInit(&motor1,sizeof(motor1));
-    //motor2 parameter setting
+    //motor2 parameter setting(left)
     motor2.ID=MOTORB;
     motor2.inputPin1=B1;
     motor2.inputPin2=B2;
@@ -195,28 +169,20 @@ void main(void)
     imu1Handle=MPU6050init(&imu1,sizeof(imu1));
 
     vehicle1handle=HAL_vehicleInit(&vehicle1,sizeof(vehicle1));
-    //vehicle1.balanceKd=1.0f;
 
-    balanceHandle=pidControllerInit(&balanceController,sizeof(balanceController));
-    balanceController.ts=1.5e-3f;
-    balanceController.kp=55.0f;
-    balanceController.td=0.85f;
 
-    eqepMotorA.eqepBase=EQEP_motorA_BASE;
     eqepMotorAHandle=HAL_quadratureEncoderInit(&eqepMotorA,sizeof(eqepMotorA));
+    eqepMotorA.eqepBase=EQEP_motorA_BASE;
 
-    eqepMotorB.eqepBase=EQEP_motorB_BASE;
+
     eqepMotorBHandle=HAL_quadratureEncoderInit(&eqepMotorB,sizeof(eqepMotorB));
+    eqepMotorB.eqepBase=EQEP_motorB_BASE;
 
     speedController_RightHandle=pidControllerInit(&speedController_Right,sizeof(speedController_Right));
     speedController_LeftHandle=pidControllerInit(&speedController_Left,sizeof(speedController_Left));
-    speedController_Right.iterm_Min=-200.0f;
-    speedController_Right.iterm_Max=200.0f;
-    speedController_Left.iterm_Min=-200.0f;
-    speedController_Left.iterm_Max=200.0f;
 
-    steeringHandle=pidControllerInit(&steeringPID, sizeof(steeringPID));
-
+    CANHandle=canInit(&can1,sizeof(can1));
+    usartHandle=cmdInit(&usartB,sizeof(usartB));
 
     checkAttendence();//Check sensor present
     setOffset(imu1Handle);
@@ -239,80 +205,111 @@ void main(void)
         HAL_fallDetection(vehicle1handle,imu1Handle);
         HAL_hoverDetection(vehicle1handle,imu1Handle);
         HAL_proportionalSteering(vehicle1handle);
+        updateCAN(CANHandle,imu1Handle,vehicle1handle);
+        cmdParse(usartHandle);
+        comDispatch(usartHandle,vehicle1handle);
+        /*
         if(CPUTimer_getTimerOverflowStatus(filterTimer_BASE))
         {
 
                 RC_MACRO(speedRamp)
+                if(vehicle1.status==PICKUP || FALLING==vehicle1.status)
+                 {
+                     motorSetDutyCycle(motor1Handle, 0.0f);
+                     motorSetDutyCycle(motor2Handle, 0.0f);
+                     motorSetStatus(motor1Handle,MOTOR_BRAKE);
+                     motorSetStatus(motor2Handle,MOTOR_BRAKE);
+                     motorRun(motor1Handle);
+                     motorRun(motor2Handle);
+                 }
+                else
+                {
+                    HAL_balanceControl(vehicle1handle,imu1Handle);
+                    //right wheel speed control
+                   speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+                   speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
+                   speedPIcontroller3(speedController_RightHandle);
+                    //left wheel speed control
+                   speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+                   speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
+                   speedPIcontroller3(speedController_LeftHandle);
 
-                //right wheel speed control
-                speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-                speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
-               speedPIcontroller(speedController_RightHandle);
-                //left wheel speed control
-                speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-               speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
-               speedPIcontroller(speedController_LeftHandle);
 
-                 // HAL_steeringControl(vehicle1handle,imu1Handle);
+                   motor1.dutyCycle=vehicle1.balancePWM+speedController_Left.out+vehicle1.steeringPWM;
+                   motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-vehicle1.steeringPWM;
 
-                    /*
-                  speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-                   speedController_Left.fbValue=eqepMotorA.dir*vehicle1.speedMS*1000;
-                   speedPIcontroller(speedController_LeftHandle);
-                    */
-                //HAL_balanceControl(vehicle1handle,imu1Handle);
-               // balanceController.refInput=vehicle1.targetAngle;//Unit: Degree
-               // balanceController.fbValue=imu1.orientation.roll*MATH_R2D-2.21f;
-               // updateP_Dcontroller(balanceHandle);
-
-               motor1.dutyCycle=vehicle1.balancePWM+speedController_Left.out+vehicle1.steeringPWM;
-               motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-vehicle1.steeringPWM;
-                //filter testing code
-               // vehicle1.balancePWM=balanceController.out-vehicle1.balanceKd*imu1.GX*MATH_R2D;
-                //motor1.dutyCycle=vehicle1.balancePWM;
-                //motor2.dutyCycle=vehicle1.balancePWM*0.91f;
-
-                 //yaw rate control
-                 //steeringPID.fbValue=imu1.GZ*MATH_R2D+2.8f;
-                 //steeringPID.refInput=vehicle1.targetYawRate;
-                // updatePIDcontroller(steeringHandle);
-                //HAL_vehicleRun(motor1Handle,motor2Handle);
-             //status_send(imu1.orientation.roll*MATH_R2D, imu1.orientation.pitch*MATH_R2D, imu1.orientation.yaw*MATH_R2D);
-
+                   HAL_vehicleRun(motor1Handle,motor2Handle);
+                   status_send(imu1.orientation.roll*MATH_R2D, imu1.orientation.pitch*MATH_R2D, imu1.orientation.yaw*MATH_R2D);
+                }
 
             CPUTimer_startTimer(filterTimer_BASE);
+            */
+
         }
-    }
 }
 
 
-__interrupt void INT_IMU_data_Ready_XINT_ISR(void)
+__interrupt void INT_mainController_ISR(void)
 {
 
         IMURead(IMUADDR, 0x3B, 14, imu1.dataBuffer);
         MPU_dataProcessing(imu1Handle);
         complemenaryEuler(imu1Handle);
+        //status_send(imu1.orientation.roll*MATH_R2D, imu1.orientation.pitch*MATH_R2D, imu1.orientation.yaw*MATH_R2D);
+
+        //wheel speed calculation
+        HAL_speedCalculation(eqepMotorAHandle);
+        //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 5Hz CUTOFF here to filter the speed.
+        vehicle1.speedMSRight=eqepMotorA.speedMS*0.136f+vehicle1.speedMSRight*0.864f;
+        //data_print(eqepMotorA.speedMS,vehicle1.speedMSRight);
+
+        HAL_speedCalculation(eqepMotorBHandle);
+        //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 5Hz CUTOFF here to filter the speed.
+        vehicle1.speedMSLeft=eqepMotorB.speedMS*0.136f+vehicle1.speedMSLeft*0.864f;
+        //data_print(eqepMotorB.speedMS,vehicle1.speedMSLeft);
+        vehicle1.vehicleDirection=eqepMotorA.dir;
+        vehicle1.speedMS=(vehicle1.speedMSLeft+vehicle1.speedMSRight)*0.5f;
+
+        //speed ramp
+        RC_MACRO(speedRamp)
         if(vehicle1.status==PICKUP || FALLING==vehicle1.status)
          {
-             motorSetDutyCycle(motor1Handle, 0.0f);
-             motorSetDutyCycle(motor2Handle, 0.0f);
-             motorSetStatus(motor1Handle,MOTOR_BRAKE);
-             motorSetStatus(motor2Handle,MOTOR_BRAKE);
-             motorRun(motor1Handle);
-             motorRun(motor2Handle);
+            motorSetDutyCycle(motor1Handle, 0.0f);
+            motorSetDutyCycle(motor2Handle, 0.0f);
+            motorSetStatus(motor1Handle,MOTOR_BRAKE);
+            motorSetStatus(motor2Handle,MOTOR_BRAKE);
+            motorRun(motor1Handle);
+            motorRun(motor2Handle);
          }
         else
         {
             HAL_balanceControl(vehicle1handle,imu1Handle);
-            HAL_vehicleRun(motor1Handle,motor2Handle);
-        }
-      //data log functions
-     // dlogChan1=vehicle1.speedMS;
-     // dlogChan2=steeringPID.out;
-      //DLOG_4CH_F_FUNC(&dlog_4ch1);
-      Interrupt_clearACKGroup(INT_IMU_data_Ready_XINT_INTERRUPT_ACK_GROUP);
-}
+            /*
+            //right wheel speed control
+           speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+           speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
+           speedPIcontroller2(speedController_RightHandle);
+            //left wheel speed control
+           speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+           speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
+           speedPIcontroller2(speedController_LeftHandle);
+           */
+           speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
+           speedController_Left.fbValue=vehicle1.vehicleDirection*vehicle1.speedMS*1000;
+           speedPIcontroller2(speedController_LeftHandle);
 
+           motor1.dutyCycle=vehicle1.balancePWM+speedController_Left.out+vehicle1.steeringPWM;
+           motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-vehicle1.steeringPWM;
+           //motor1.dutyCycle=1200;
+           //motor2.dutyCycle=1200;
+           HAL_vehicleRun(motor1Handle,motor2Handle);
+        }
+        //CAN transmission timing
+        can1.timeBaseCounter1++;
+        can1.timeBaseCounter2++;
+        Interrupt_clearACKGroup(INT_mainController_INTERRUPT_ACK_GROUP);
+}
+/*
 __interrupt void INT_EQEP_motorA_ISR(void)
 {
 
@@ -346,7 +343,40 @@ __interrupt void INT_EQEP_motorB_ISR(void)
     EQEP_clearInterruptStatus(EQEP_motorB_BASE, EQEP_INT_UNIT_TIME_OUT  | EQEP_INT_GLOBAL);
     Interrupt_clearACKGroup(INT_EQEP_motorB_INTERRUPT_ACK_GROUP);
 }
+*/
+__interrupt void INT_mainCAN_ISR(void)
+{
+    uint32_t status;
+    status=CAN_getInterruptCause(mainCAN_BASE);
+    if(CAN_INT_INT0ID_STATUS==status)
+    {
+        status=CAN_getStatus(mainCAN_BASE);
+        if(((status & ~(CAN_STATUS_RXOK))!=CAN_STATUS_LEC_MSK) && ((status & ~(CAN_STATUS_RXOK))!=CAN_STATUS_LEC_NONE) )
+        {
+            can1.flagError=1;
+        }
+    }
+    else if(status == 1)//received message object ID, not message ID
+    {
+        CAN_readMessage(mainCAN_BASE, 1, (uint16_t *)can1.rxBuffer);
+        CAN_clearInterruptStatus(mainCAN_BASE, 1);
+        can1.rxMsgCount++;
+        can1.flagRxDone=1;
+        can1.flagError=0;
+    }
+    CAN_clearGlobalInterruptStatus(mainCAN_BASE,CAN_GLOBAL_INT_CANINT0);
+    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP9);
+}
 
+__interrupt void INT_BL_PIC_RX_ISR(void)
+{
+    SCI_readCharArray(BL_PIC_BASE, usartB.rawCMD, 8);
+    usartB.flagNewcmd=1;
+
+    SCI_clearOverflowStatus(BL_PIC_BASE);
+    SCI_clearInterruptStatus(BL_PIC_BASE, SCI_INT_RXFF);
+    Interrupt_clearACKGroup(INT_BL_PIC_RX_INTERRUPT_ACK_GROUP);
+}
 //
 // End of File
 //

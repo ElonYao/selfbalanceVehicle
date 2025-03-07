@@ -9,32 +9,61 @@
 /**
  * Import the modules used in this configuration.
  */
-const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false);
-const cputimer1        = cputimer.addInstance();
-const epwm             = scripting.addModule("/driverlib/epwm.js", {}, false);
-const epwm1            = epwm.addInstance();
-const eqep             = scripting.addModule("/driverlib/eqep.js", {}, false);
-const eqep1            = eqep.addInstance();
-const eqep2            = eqep.addInstance();
-const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
-const gpio1            = gpio.addInstance();
-const gpio2            = gpio.addInstance();
-const gpio3            = gpio.addInstance();
-const gpio4            = gpio.addInstance();
-const gpio5            = gpio.addInstance();
-const i2c              = scripting.addModule("/driverlib/i2c.js", {}, false);
-const i2c1             = i2c.addInstance();
-const inputxbar_input  = scripting.addModule("/driverlib/inputxbar_input.js", {}, false);
-const inputxbar_input1 = inputxbar_input.addInstance();
-const sci              = scripting.addModule("/driverlib/sci.js", {}, false);
-const sci1             = sci.addInstance();
+const can       = scripting.addModule("/driverlib/can.js", {}, false);
+const can1      = can.addInstance();
+const cputimer  = scripting.addModule("/driverlib/cputimer.js", {}, false);
+const cputimer1 = cputimer.addInstance();
+const epwm      = scripting.addModule("/driverlib/epwm.js", {}, false);
+const epwm1     = epwm.addInstance();
+const eqep      = scripting.addModule("/driverlib/eqep.js", {}, false);
+const eqep1     = eqep.addInstance();
+const eqep2     = eqep.addInstance();
+const gpio      = scripting.addModule("/driverlib/gpio.js", {}, false);
+const gpio1     = gpio.addInstance();
+const gpio2     = gpio.addInstance();
+const gpio3     = gpio.addInstance();
+const gpio4     = gpio.addInstance();
+const i2c       = scripting.addModule("/driverlib/i2c.js", {}, false);
+const i2c1      = i2c.addInstance();
+const sci       = scripting.addModule("/driverlib/sci.js", {}, false);
+const sci1      = sci.addInstance();
+const sci2      = sci.addInstance();
 
 /**
  * Write custom configuration values to the imported modules.
  */
-cputimer1.$name       = "filterTimer";
-cputimer1.timerPeriod = 2000000;
-cputimer1.startTimer  = true;
+can1.$name                = "mainCAN";
+can1.msgObjsUsed          = [1,2,3];
+can1.interruptLine        = ["CAN_GLOBAL_INT_CANINT0"];
+can1.interruptFlags       = ["CAN_INT_ERROR","CAN_INT_IE0","CAN_INT_STATUS"];
+can1.enableInterrupt      = true;
+can1.can.$assign          = "CANB";
+can1.can.canrxPin.$assign = "GPIO17";
+can1.can.cantxPin.$assign = "GPIO12";
+can1.msgObj1.$name        = "msgObj0";
+can1.msgObj1.frameType    = "CAN_MSG_FRAME_EXT";
+can1.msgObj1.msgID        = 201391869;
+can1.msgObj1.flags        = ["CAN_MSG_OBJ_RX_INT_ENABLE","CAN_MSG_OBJ_USE_ID_FILTER"];
+can1.msgObj2.$name        = "msgObj1";
+can1.msgObj2.frameType    = "CAN_MSG_FRAME_EXT";
+can1.msgObj2.msgID        = 217060350;
+can1.msgObj2.msgType      = "CAN_MSG_OBJ_TYPE_TX";
+can1.msgObj2.msgLen       = 8;
+can1.msgObj3.$name        = "msgObj2";
+can1.msgObj3.frameType    = "CAN_MSG_FRAME_EXT";
+can1.msgObj3.msgID        = 217056510;
+can1.msgObj3.msgType      = "CAN_MSG_OBJ_TYPE_TX";
+can1.msgObj3.msgLen       = 8;
+scripting.suppress("Not pinned out,@@@.+?@@@ is not pinned out on the LaunchPad F28379D\\.  @@@.+?@@@", can1.can, "canrxPin");
+scripting.suppress("Not pinned out,@@@.+?@@@ is not pinned out on the LaunchPad F28379D\\.  @@@.+?@@@", can1.can, "cantxPin");
+
+cputimer1.startTimer               = true;
+cputimer1.timerPeriod              = 1000000;
+cputimer1.emulationMode            = "CPUTIMER_EMULATIONMODE_RUNFREE";
+cputimer1.$name                    = "mainController";
+cputimer1.registerInterrupts       = true;
+cputimer1.enableInterrupt          = true;
+cputimer1.timerInt.enableInterrupt = true;
 
 epwm1.$name                                                    = "MotorControl";
 epwm1.epwmTimebase_periodLoadMode                              = "EPWM_PERIOD_DIRECT_LOAD";
@@ -59,35 +88,27 @@ epwm1.epwm.epwm_bPin.$assign                                   = "boosterpack2.7
 scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to EPWM6 BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", epwm1.epwm, "epwm_aPin");
 scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to EPWM6 BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", epwm1.epwm, "epwm_bPin");
 
-eqep1.$name                   = "EQEP_motorA";
-eqep1.$hardware               = system.deviceData.board.components.EQEP1_HEADER;
-eqep1.positionCounterMax      = 4294967295;
-eqep1.latchPositionCounter    = "EQEP_LATCH_UNIT_TIME_OUT";
-eqep1.enableUnitTimer         = true;
-eqep1.unitTimerPeriod         = 2000000;
-eqep1.swPositionInit          = true;
-eqep1.enableModule            = true;
-eqep1.registerInterrupts      = true;
-eqep1.enableInterrupt         = true;
-eqep1.emulationMode           = "EQEP_EMULATIONMODE_RUNFREE";
-eqep1.eqepResolution          = "EQEP_CONFIG_1X_RESOLUTION";
-eqep1.interruptSources        = ["EQEP_INT_UNIT_TIME_OUT"];
-eqep1.eqepInt.enableInterrupt = true;
+eqep1.$name                = "EQEP_motorA";
+eqep1.$hardware            = system.deviceData.board.components.EQEP1_HEADER;
+eqep1.positionCounterMax   = 4294967295;
+eqep1.latchPositionCounter = "EQEP_LATCH_UNIT_TIME_OUT";
+eqep1.enableUnitTimer      = true;
+eqep1.swPositionInit       = true;
+eqep1.enableModule         = true;
+eqep1.emulationMode        = "EQEP_EMULATIONMODE_RUNFREE";
+eqep1.eqepResolution       = "EQEP_CONFIG_1X_RESOLUTION";
+eqep1.unitTimerPeriod      = 1000000;
 
-eqep2.$name                   = "EQEP_motorB";
-eqep2.$hardware               = system.deviceData.board.components.EQEP2_HEADER;
-eqep2.eqepResolution          = "EQEP_CONFIG_1X_RESOLUTION";
-eqep2.latchPositionCounter    = "EQEP_LATCH_UNIT_TIME_OUT";
-eqep2.swPositionInit          = true;
-eqep2.enableModule            = true;
-eqep2.enableUnitTimer         = true;
-eqep2.unitTimerPeriod         = 2000000;
-eqep2.emulationMode           = "EQEP_EMULATIONMODE_RUNFREE";
-eqep2.positionCounterMax      = 4294967295;
-eqep2.registerInterrupts      = true;
-eqep2.enableInterrupt         = true;
-eqep2.interruptSources        = ["EQEP_INT_UNIT_TIME_OUT"];
-eqep2.eqepInt.enableInterrupt = true;
+eqep2.$name                = "EQEP_motorB";
+eqep2.$hardware            = system.deviceData.board.components.EQEP2_HEADER;
+eqep2.eqepResolution       = "EQEP_CONFIG_1X_RESOLUTION";
+eqep2.latchPositionCounter = "EQEP_LATCH_UNIT_TIME_OUT";
+eqep2.swPositionInit       = true;
+eqep2.enableModule         = true;
+eqep2.enableUnitTimer      = true;
+eqep2.emulationMode        = "EQEP_EMULATIONMODE_RUNFREE";
+eqep2.positionCounterMax   = 4294967295;
+eqep2.unitTimerPeriod      = 1000000;
 
 gpio1.$name           = "A1";
 gpio1.direction       = "GPIO_DIR_MODE_OUT";
@@ -97,21 +118,13 @@ gpio2.$name           = "A2";
 gpio2.direction       = "GPIO_DIR_MODE_OUT";
 gpio2.gpioPin.$assign = "boosterpack2.73";
 
-gpio3.$name                     = "IMU_data_Ready";
-gpio3.useInterrupt              = true;
-gpio3.gpioPin.$assign           = "boosterpack1.8";
-gpio3.xint.intType              = "GPIO_INT_TYPE_RISING_EDGE";
-gpio3.xint.enableInt            = true;
-gpio3.xint.registerInterrupts   = true;
-gpio3.xint.xInt.enableInterrupt = true;
+gpio3.direction       = "GPIO_DIR_MODE_OUT";
+gpio3.$name           = "B1";
+gpio3.gpioPin.$assign = "boosterpack2.52";
 
 gpio4.direction       = "GPIO_DIR_MODE_OUT";
-gpio4.$name           = "B1";
-gpio4.gpioPin.$assign = "boosterpack2.52";
-
-gpio5.direction       = "GPIO_DIR_MODE_OUT";
-gpio5.$name           = "B2";
-gpio5.gpioPin.$assign = "boosterpack2.51";
+gpio4.$name           = "B2";
+gpio4.gpioPin.$assign = "boosterpack2.51";
 
 i2c1.$name              = "IMU_6050";
 i2c1.bitCount           = "I2C_BITCOUNT_8";
@@ -128,10 +141,6 @@ i2c1.sclQual.padConfig  = "STD";
 scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to I2CA BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", i2c1.i2c, "sdaPin");
 scripting.suppress("Connected to hardware,@@@.+?@@@ is connected to I2CA BP on the LaunchPad F28379D\\. Consider selecting it in \'use hardware\' above\\. @@@.+?@@@", i2c1.i2c, "sclPin");
 
-inputxbar_input1.$name         = "myINPUTXBARINPUT0";
-gpio3.xint.inputxbar           = inputxbar_input1;
-inputxbar_input1.inputxbarGpio = "GPIO22";
-
 sci1.$name                 = "Data_output";
 sci1.useInterrupts         = false;
 sci1.sci.$assign           = "SCIA";
@@ -141,6 +150,16 @@ sci1.rxQual.$name          = "myGPIOQUAL0";
 sci1.txQual.$name          = "myGPIOQUAL1";
 scripting.suppress("Not pinned out,@@@.+?@@@ is not pinned out on the LaunchPad F28379D\\.  @@@.+?@@@", sci1.sci, "scirxdPin");
 scripting.suppress("Not pinned out,@@@.+?@@@ is not pinned out on the LaunchPad F28379D\\.  @@@.+?@@@", sci1.sci, "scitxdPin");
+
+sci2.$name                      = "BL_PIC";
+sci2.selectRegisteredInterrupts = ["registerRxInt"];
+sci2.$hardware                  = system.deviceData.board.components.BP_SITE_1.subComponents.SCI;
+sci2.enabledFIFOInterrupts      = ["SCI_INT_RXFF"];
+sci2.baudRates                  = 9600;
+sci2.rxFifo                     = "SCI_FIFO_RX8";
+sci2.rxQual.$name               = "myGPIOQUAL2";
+sci2.txQual.$name               = "myGPIOQUAL3";
+sci2.sciRXInt.enableInterrupt   = true;
 
 /**
  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
@@ -155,3 +174,6 @@ eqep2.eqep.$suggestSolution          = "EQEP2";
 eqep2.eqep.eqepaPin.$suggestSolution = "qepB.1";
 eqep2.eqep.eqepbPin.$suggestSolution = "qepB.2";
 eqep2.eqep.eqepiPin.$suggestSolution = "qepB.3";
+sci2.sci.$suggestSolution            = "SCIB";
+sci2.sci.scirxdPin.$suggestSolution  = "boosterpack1.3";
+sci2.sci.scitxdPin.$suggestSolution  = "boosterpack1.4";

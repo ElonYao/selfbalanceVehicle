@@ -14,6 +14,7 @@ ORDERED_OBJS += \
 "./syscfg/c2000ware_libraries.obj" \
 "./selfbalance.obj" \
 "./HAL/DLOG_4CH_F.obj" \
+"./HAL/comm_Elon.obj" \
 "./HAL/hal.obj" \
 "./device/F2837xD_CodeStartBranch.obj" \
 "./device/device.obj" \
@@ -159,8 +160,8 @@ selfBalance.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "syscfg\board.obj" "syscfg\c2000ware_libraries.obj" "selfbalance.obj" "HAL\DLOG_4CH_F.obj" "HAL\hal.obj" "device\F2837xD_CodeStartBranch.obj" "device\device.obj" "pid\PID_Elon.obj" "sensorFusion\IMU6050_Elon.obj" "sensorFusion\flightmointor.obj" 
-	-$(RM) "syscfg\board.d" "syscfg\c2000ware_libraries.d" "selfbalance.d" "HAL\DLOG_4CH_F.d" "HAL\hal.d" "device\device.d" "pid\PID_Elon.d" "sensorFusion\IMU6050_Elon.d" "sensorFusion\flightmointor.d" 
+	-$(RM) "syscfg\board.obj" "syscfg\c2000ware_libraries.obj" "selfbalance.obj" "HAL\DLOG_4CH_F.obj" "HAL\comm_Elon.obj" "HAL\hal.obj" "device\F2837xD_CodeStartBranch.obj" "device\device.obj" "pid\PID_Elon.obj" "sensorFusion\IMU6050_Elon.obj" "sensorFusion\flightmointor.obj" 
+	-$(RM) "syscfg\board.d" "syscfg\c2000ware_libraries.d" "selfbalance.d" "HAL\DLOG_4CH_F.d" "HAL\comm_Elon.d" "HAL\hal.d" "device\device.d" "pid\PID_Elon.d" "sensorFusion\IMU6050_Elon.d" "sensorFusion\flightmointor.d" 
 	-$(RM) "device\F2837xD_CodeStartBranch.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'

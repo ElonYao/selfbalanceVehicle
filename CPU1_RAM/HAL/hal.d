@@ -2,7 +2,7 @@
 
 HAL/hal.obj: ../HAL/hal.c
 HAL/hal.obj: ../HAL/hal.h
-HAL/hal.obj: C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/device/driverlib.h
+HAL/hal.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/driverlib.h
 HAL/hal.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_memmap.h
 HAL/hal.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/adc.h
 HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdbool.h
@@ -91,8 +91,8 @@ HAL/hal.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/driver
 HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/string.h
 HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/xlocale/_string.h
 HAL/hal.obj: syscfg/board.h
-HAL/hal.obj: C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/device/device.h
-HAL/hal.obj: C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/sensorFusion/IMU6050_Elon.h
+HAL/hal.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/device.h
+HAL/hal.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/sensorFusion/IMU6050_Elon.h
 HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdio.h
 HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdarg.h
 HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdlib.h
@@ -105,7 +105,7 @@ HAL/hal.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/ma
 
 ../HAL/hal.h:
 
-C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/device/driverlib.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/driverlib.h:
 
 C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_memmap.h:
 
@@ -283,9 +283,9 @@ C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/xlocale/_string
 
 syscfg/board.h:
 
-C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/device/device.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/device.h:
 
-C:/Users/elony/OneDrive/Documents/GitHub/selfbalanceVehicle/sensorFusion/IMU6050_Elon.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/sensorFusion/IMU6050_Elon.h:
 
 C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdio.h:
 

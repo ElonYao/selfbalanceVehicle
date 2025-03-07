@@ -48,15 +48,14 @@ void Board_init()
 	EALLOW;
 
 	PinMux_init();
-	INPUTXBAR_init();
 	SYNC_init();
+	CAN_init();
 	CPUTIMER_init();
 	EPWM_init();
 	EQEP_init();
 	GPIO_init();
 	I2C_init();
 	SCI_init();
-	XINT_init();
 	INTERRUPT_init();
 
 	EDIS;
@@ -73,6 +72,17 @@ void PinMux_init()
 	// PinMux for modules assigned to CPU1
 	//
 	
+	//
+	// CANB -> mainCAN Pinmux
+	//
+	GPIO_setPinConfig(mainCAN_CANRX_PIN_CONFIG);
+	GPIO_setPadConfig(mainCAN_CANRX_GPIO, GPIO_PIN_TYPE_STD | GPIO_PIN_TYPE_PULLUP);
+	GPIO_setQualificationMode(mainCAN_CANRX_GPIO, GPIO_QUAL_ASYNC);
+
+	GPIO_setPinConfig(mainCAN_CANTX_PIN_CONFIG);
+	GPIO_setPadConfig(mainCAN_CANTX_GPIO, GPIO_PIN_TYPE_STD | GPIO_PIN_TYPE_PULLUP);
+	GPIO_setQualificationMode(mainCAN_CANTX_GPIO, GPIO_QUAL_ASYNC);
+
 	//
 	// EPWM6 -> MotorControl Pinmux
 	//
@@ -118,8 +128,6 @@ void PinMux_init()
 	GPIO_setPinConfig(GPIO_14_GPIO14);
 	// GPIO15 -> A2 Pinmux
 	GPIO_setPinConfig(GPIO_15_GPIO15);
-	// GPIO22 -> IMU_data_Ready Pinmux
-	GPIO_setPinConfig(GPIO_22_GPIO22);
 	// GPIO27 -> B1 Pinmux
 	GPIO_setPinConfig(GPIO_27_GPIO27);
 	// GPIO25 -> B2 Pinmux
@@ -146,7 +154,83 @@ void PinMux_init()
 	GPIO_setPadConfig(Data_output_SCITX_GPIO, GPIO_PIN_TYPE_STD | GPIO_PIN_TYPE_PULLUP);
 	GPIO_setQualificationMode(Data_output_SCITX_GPIO, GPIO_QUAL_ASYNC);
 
+	//
+	// SCIB -> BL_PIC Pinmux
+	//
+	GPIO_setPinConfig(BL_PIC_SCIRX_PIN_CONFIG);
+	GPIO_setPadConfig(BL_PIC_SCIRX_GPIO, GPIO_PIN_TYPE_STD | GPIO_PIN_TYPE_PULLUP);
+	GPIO_setQualificationMode(BL_PIC_SCIRX_GPIO, GPIO_QUAL_ASYNC);
 
+	GPIO_setPinConfig(BL_PIC_SCITX_PIN_CONFIG);
+	GPIO_setPadConfig(BL_PIC_SCITX_GPIO, GPIO_PIN_TYPE_STD | GPIO_PIN_TYPE_PULLUP);
+	GPIO_setQualificationMode(BL_PIC_SCITX_GPIO, GPIO_QUAL_ASYNC);
+
+
+}
+
+//*****************************************************************************
+//
+// CAN Configurations
+//
+//*****************************************************************************
+void CAN_init(){
+	mainCAN_init();
+}
+
+void mainCAN_init(){
+	CAN_initModule(mainCAN_BASE);
+	//
+	// Refer to the Driver Library User Guide for information on how to set
+	// tighter timing control. Additionally, consult the device data sheet
+	// for more information about the CAN module clocking.
+	//
+	CAN_setBitTiming(mainCAN_BASE, 15, 0, 15, 7, 3);
+	//
+	// Enable CAN Interrupts
+	//
+	CAN_enableInterrupt(mainCAN_BASE, CAN_INT_ERROR|CAN_INT_IE0|CAN_INT_STATUS);
+	CAN_enableGlobalInterrupt(mainCAN_BASE, CAN_GLOBAL_INT_CANINT0);
+	//
+	// Initialize the transmit message object used for sending CAN messages.
+	// Message Object Parameters:
+	//      Message Object ID Number: 1
+	//      Message Identifier: 201391869
+	//      Message Frame: CAN_MSG_FRAME_EXT
+	//      Message Type: CAN_MSG_OBJ_TYPE_RX
+	//      Message ID Mask: 0
+	//      Message Object Flags: CAN_MSG_OBJ_RX_INT_ENABLE,CAN_MSG_OBJ_USE_ID_FILTER
+	//      Message Data Length: 0 Bytes
+	//
+	CAN_setupMessageObject(mainCAN_BASE, 1, mainCAN_MessageObj1_ID, CAN_MSG_FRAME_EXT,CAN_MSG_OBJ_TYPE_RX, 0, CAN_MSG_OBJ_RX_INT_ENABLE|CAN_MSG_OBJ_USE_ID_FILTER,0);
+	//
+	// Initialize the transmit message object used for sending CAN messages.
+	// Message Object Parameters:
+	//      Message Object ID Number: 2
+	//      Message Identifier: 217060350
+	//      Message Frame: CAN_MSG_FRAME_EXT
+	//      Message Type: CAN_MSG_OBJ_TYPE_TX
+	//      Message ID Mask: 0
+	//      Message Object Flags: 
+	//      Message Data Length: 8 Bytes
+	//
+	CAN_setupMessageObject(mainCAN_BASE, 2, mainCAN_MessageObj2_ID, CAN_MSG_FRAME_EXT,CAN_MSG_OBJ_TYPE_TX, 0, 0,8);
+	//
+	// Initialize the transmit message object used for sending CAN messages.
+	// Message Object Parameters:
+	//      Message Object ID Number: 3
+	//      Message Identifier: 217056510
+	//      Message Frame: CAN_MSG_FRAME_EXT
+	//      Message Type: CAN_MSG_OBJ_TYPE_TX
+	//      Message ID Mask: 0
+	//      Message Object Flags: 
+	//      Message Data Length: 8 Bytes
+	//
+	CAN_setupMessageObject(mainCAN_BASE, 3, mainCAN_MessageObj3_ID, CAN_MSG_FRAME_EXT,CAN_MSG_OBJ_TYPE_TX, 0, 0,8);
+	CAN_setInterruptMux(mainCAN_BASE, 0);
+	//
+	// Start CAN module operations
+	//
+	CAN_startModule(mainCAN_BASE);
 }
 
 //*****************************************************************************
@@ -155,18 +239,18 @@ void PinMux_init()
 //
 //*****************************************************************************
 void CPUTIMER_init(){
-	filterTimer_init();
+	mainController_init();
 }
 
-void filterTimer_init(){
-	CPUTimer_setEmulationMode(filterTimer_BASE, CPUTIMER_EMULATIONMODE_STOPAFTERNEXTDECREMENT);
-	CPUTimer_setPreScaler(filterTimer_BASE, 0U);
-	CPUTimer_setPeriod(filterTimer_BASE, 2000000U);
-	CPUTimer_disableInterrupt(filterTimer_BASE);
-	CPUTimer_stopTimer(filterTimer_BASE);
+void mainController_init(){
+	CPUTimer_setEmulationMode(mainController_BASE, CPUTIMER_EMULATIONMODE_RUNFREE);
+	CPUTimer_setPreScaler(mainController_BASE, 0U);
+	CPUTimer_setPeriod(mainController_BASE, 1000000U);
+	CPUTimer_enableInterrupt(mainController_BASE);
+	CPUTimer_stopTimer(mainController_BASE);
 
-	CPUTimer_reloadTimerCounter(filterTimer_BASE);
-	CPUTimer_startTimer(filterTimer_BASE);
+	CPUTimer_reloadTimerCounter(mainController_BASE);
+	CPUTimer_startTimer(mainController_BASE);
 }
 
 //*****************************************************************************
@@ -220,35 +304,6 @@ void EQEP_init(){
 
 void EQEP_motorA_init(){
 	//
-	// Disable, clear all flags and interrupts
-	//
-	EQEP_disableInterrupt(EQEP_motorA_BASE,
-		(EQEP_INT_GLOBAL     		|   
-		EQEP_INT_POS_CNT_ERROR		|      
-		EQEP_INT_PHASE_ERROR    	| 
-		EQEP_INT_DIR_CHANGE    		| 
-		EQEP_INT_WATCHDOG          	|   
-		EQEP_INT_UNDERFLOW         	|
-		EQEP_INT_OVERFLOW        	|
-		EQEP_INT_POS_COMP_READY    	|	
-		EQEP_INT_POS_COMP_MATCH   	|
-		EQEP_INT_STROBE_EVNT_LATCH	| 
-		EQEP_INT_INDEX_EVNT_LATCH 	|
-		EQEP_INT_UNIT_TIME_OUT));
-	EQEP_clearInterruptStatus(EQEP_motorA_BASE,
-		(EQEP_INT_GLOBAL     		|   
-		EQEP_INT_POS_CNT_ERROR		|      
-		EQEP_INT_PHASE_ERROR    	| 
-		EQEP_INT_DIR_CHANGE    		| 
-		EQEP_INT_WATCHDOG          	|   
-		EQEP_INT_UNDERFLOW         	|
-		EQEP_INT_OVERFLOW        	|
-		EQEP_INT_POS_COMP_READY    	|	
-		EQEP_INT_POS_COMP_MATCH   	|
-		EQEP_INT_STROBE_EVNT_LATCH	| 
-		EQEP_INT_INDEX_EVNT_LATCH 	|
-		EQEP_INT_UNIT_TIME_OUT));
-	//
 	// Sets the polarity of the eQEP module's input signals.
 	//
 	EQEP_setInputPolarity(EQEP_motorA_BASE,false,false,false,false);
@@ -271,7 +326,7 @@ void EQEP_motorA_init(){
 	//
 	// Enables the eQEP module unit timer.
 	//
-	EQEP_enableUnitTimer(EQEP_motorA_BASE,2000000U);
+	EQEP_enableUnitTimer(EQEP_motorA_BASE,1000000U);
 	//
 	// Disables the eQEP module watchdog timer.
 	//
@@ -280,10 +335,6 @@ void EQEP_motorA_init(){
 	// Configures the quadrature modes in which the position count can be latched.
 	//
 	EQEP_setLatchMode(EQEP_motorA_BASE,(EQEP_LATCH_UNIT_TIME_OUT|EQEP_LATCH_RISING_STROBE|EQEP_LATCH_RISING_INDEX));
-	//
-	// Enables individual eQEP module interrupt sources.
-	//
-	EQEP_enableInterrupt(EQEP_motorA_BASE,(EQEP_INT_UNIT_TIME_OUT));
 	//
 	// Configures the mode in which the position counter is initialized.
 	//
@@ -302,35 +353,6 @@ void EQEP_motorA_init(){
 	EQEP_enableModule(EQEP_motorA_BASE);
 }
 void EQEP_motorB_init(){
-	//
-	// Disable, clear all flags and interrupts
-	//
-	EQEP_disableInterrupt(EQEP_motorB_BASE,
-		(EQEP_INT_GLOBAL     		|   
-		EQEP_INT_POS_CNT_ERROR		|      
-		EQEP_INT_PHASE_ERROR    	| 
-		EQEP_INT_DIR_CHANGE    		| 
-		EQEP_INT_WATCHDOG          	|   
-		EQEP_INT_UNDERFLOW         	|
-		EQEP_INT_OVERFLOW        	|
-		EQEP_INT_POS_COMP_READY    	|	
-		EQEP_INT_POS_COMP_MATCH   	|
-		EQEP_INT_STROBE_EVNT_LATCH	| 
-		EQEP_INT_INDEX_EVNT_LATCH 	|
-		EQEP_INT_UNIT_TIME_OUT));
-	EQEP_clearInterruptStatus(EQEP_motorB_BASE,
-		(EQEP_INT_GLOBAL     		|   
-		EQEP_INT_POS_CNT_ERROR		|      
-		EQEP_INT_PHASE_ERROR    	| 
-		EQEP_INT_DIR_CHANGE    		| 
-		EQEP_INT_WATCHDOG          	|   
-		EQEP_INT_UNDERFLOW         	|
-		EQEP_INT_OVERFLOW        	|
-		EQEP_INT_POS_COMP_READY    	|	
-		EQEP_INT_POS_COMP_MATCH   	|
-		EQEP_INT_STROBE_EVNT_LATCH	| 
-		EQEP_INT_INDEX_EVNT_LATCH 	|
-		EQEP_INT_UNIT_TIME_OUT));
 	//
 	// Sets the polarity of the eQEP module's input signals.
 	//
@@ -354,7 +376,7 @@ void EQEP_motorB_init(){
 	//
 	// Enables the eQEP module unit timer.
 	//
-	EQEP_enableUnitTimer(EQEP_motorB_BASE,2000000U);
+	EQEP_enableUnitTimer(EQEP_motorB_BASE,1000000U);
 	//
 	// Disables the eQEP module watchdog timer.
 	//
@@ -363,10 +385,6 @@ void EQEP_motorB_init(){
 	// Configures the quadrature modes in which the position count can be latched.
 	//
 	EQEP_setLatchMode(EQEP_motorB_BASE,(EQEP_LATCH_UNIT_TIME_OUT|EQEP_LATCH_RISING_STROBE|EQEP_LATCH_RISING_INDEX));
-	//
-	// Enables individual eQEP module interrupt sources.
-	//
-	EQEP_enableInterrupt(EQEP_motorB_BASE,(EQEP_INT_UNIT_TIME_OUT));
 	//
 	// Configures the mode in which the position counter is initialized.
 	//
@@ -393,7 +411,6 @@ void EQEP_motorB_init(){
 void GPIO_init(){
 	A1_init();
 	A2_init();
-	IMU_data_Ready_init();
 	B1_init();
 	B2_init();
 }
@@ -409,12 +426,6 @@ void A2_init(){
 	GPIO_setQualificationMode(A2, GPIO_QUAL_SYNC);
 	GPIO_setDirectionMode(A2, GPIO_DIR_MODE_OUT);
 	GPIO_setControllerCore(A2, GPIO_CORE_CPU1);
-}
-void IMU_data_Ready_init(){
-	GPIO_setPadConfig(IMU_data_Ready, GPIO_PIN_TYPE_STD);
-	GPIO_setQualificationMode(IMU_data_Ready, GPIO_QUAL_SYNC);
-	GPIO_setDirectionMode(IMU_data_Ready, GPIO_DIR_MODE_IN);
-	GPIO_setControllerCore(IMU_data_Ready, GPIO_CORE_CPU1);
 }
 void B1_init(){
 	GPIO_setPadConfig(B1, GPIO_PIN_TYPE_STD);
@@ -455,38 +466,20 @@ void IMU_6050_init(){
 
 //*****************************************************************************
 //
-// INPUTXBAR Configurations
-//
-//*****************************************************************************
-void INPUTXBAR_init(){
-	myINPUTXBARINPUT0_init();
-}
-
-void myINPUTXBARINPUT0_init(){
-	XBAR_setInputPin(myINPUTXBARINPUT0_INPUT, myINPUTXBARINPUT0_SOURCE);
-}
-
-//*****************************************************************************
-//
 // INTERRUPT Configurations
 //
 //*****************************************************************************
 void INTERRUPT_init(){
 	
-	// Interrupt Settings for INT_EQEP_motorA
+	// Interrupt Settings for INT_mainController
 	// ISR need to be defined for the registered interrupts
-	Interrupt_register(INT_EQEP_motorA, &INT_EQEP_motorA_ISR);
-	Interrupt_enable(INT_EQEP_motorA);
+	Interrupt_register(INT_mainController, &INT_mainController_ISR);
+	Interrupt_enable(INT_mainController);
 	
-	// Interrupt Settings for INT_EQEP_motorB
+	// Interrupt Settings for INT_BL_PIC_RX
 	// ISR need to be defined for the registered interrupts
-	Interrupt_register(INT_EQEP_motorB, &INT_EQEP_motorB_ISR);
-	Interrupt_enable(INT_EQEP_motorB);
-	
-	// Interrupt Settings for INT_IMU_data_Ready_XINT
-	// ISR need to be defined for the registered interrupts
-	Interrupt_register(INT_IMU_data_Ready_XINT, &INT_IMU_data_Ready_XINT_ISR);
-	Interrupt_enable(INT_IMU_data_Ready_XINT);
+	Interrupt_register(INT_BL_PIC_RX, &INT_BL_PIC_RX_ISR);
+	Interrupt_enable(INT_BL_PIC_RX);
 }
 //*****************************************************************************
 //
@@ -495,6 +488,7 @@ void INTERRUPT_init(){
 //*****************************************************************************
 void SCI_init(){
 	Data_output_init();
+	BL_PIC_init();
 }
 
 void Data_output_init(){
@@ -508,6 +502,20 @@ void Data_output_init(){
 	SCI_performSoftwareReset(Data_output_BASE);
 	SCI_enableFIFO(Data_output_BASE);
 	SCI_enableModule(Data_output_BASE);
+}
+void BL_PIC_init(){
+	SCI_clearInterruptStatus(BL_PIC_BASE, SCI_INT_RXFF | SCI_INT_TXFF | SCI_INT_FE | SCI_INT_OE | SCI_INT_PE | SCI_INT_RXERR | SCI_INT_RXRDY_BRKDT | SCI_INT_TXRDY);
+	SCI_clearOverflowStatus(BL_PIC_BASE);
+	SCI_resetTxFIFO(BL_PIC_BASE);
+	SCI_resetRxFIFO(BL_PIC_BASE);
+	SCI_resetChannels(BL_PIC_BASE);
+	SCI_setConfig(BL_PIC_BASE, DEVICE_LSPCLK_FREQ, BL_PIC_BAUDRATE, (SCI_CONFIG_WLEN_8|SCI_CONFIG_STOP_ONE|SCI_CONFIG_PAR_NONE));
+	SCI_disableLoopback(BL_PIC_BASE);
+	SCI_performSoftwareReset(BL_PIC_BASE);
+	SCI_enableInterrupt(BL_PIC_BASE, SCI_INT_RXFF);
+	SCI_setFIFOInterruptLevel(BL_PIC_BASE, SCI_FIFO_TX0, SCI_FIFO_RX8);
+	SCI_enableFIFO(BL_PIC_BASE);
+	SCI_enableModule(BL_PIC_BASE);
 }
 
 //*****************************************************************************
@@ -534,18 +542,3 @@ void SYNC_init(){
 	//
 	SysCtl_enableExtADCSOCSource(0);
 }
-//*****************************************************************************
-//
-// XINT Configurations
-//
-//*****************************************************************************
-void XINT_init(){
-	IMU_data_Ready_XINT_init();
-}
-
-void IMU_data_Ready_XINT_init(){
-	GPIO_setInterruptType(IMU_data_Ready_XINT, GPIO_INT_TYPE_RISING_EDGE);
-	GPIO_setInterruptPin(IMU_data_Ready, IMU_data_Ready_XINT);
-	GPIO_enableInterrupt(IMU_data_Ready_XINT);
-}
-
