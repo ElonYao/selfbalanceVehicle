@@ -14,7 +14,7 @@ extern "C" {
 #define _constrain(amt,min,high)  ((amt>high)? high : ((amt<min)? min : amt))
 #define WHEELRPM_SF 0.00048828f // 60/(1024*4*30)
 #define WHEELMS_SF 2.0453e-6f // pi*0.08/(1024*4*30)
-#define TURNINGPWMDEF 250
+#define TURNINGPWMDEF 300
 typedef enum
 {
     FALLING=0,

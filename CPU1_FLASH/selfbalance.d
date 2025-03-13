@@ -1,20 +1,20 @@
 # FIXED
 
 selfbalance.obj: ../selfbalance.c
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/device/driverlib.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/driverlib.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_memmap.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/adc.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdbool.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/_ti_config.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/linkage.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdint.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/_stdint40.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/stdint.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/cdefs.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/_types.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/machine/_types.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/machine/_stdint.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/_stdint.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdbool.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_ti_config.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/linkage.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdint.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_stdint40.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/stdint.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/cdefs.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/_types.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_types.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_stdint.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/_stdint.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_adc.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_sysctl.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_types.h
@@ -87,57 +87,59 @@ selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/up
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_upp.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/version.h
 selfbalance.obj: C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/driver_inclusive_terminology_mapping.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/device/device.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stddef.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/device.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stddef.h
 selfbalance.obj: syscfg/board.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/device/device.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/device.h
 selfbalance.obj: syscfg/c2000ware_libraries.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/HAL/hal.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/string.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/xlocale/_string.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/sensorFusion/IMU6050_Elon.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdio.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdarg.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdlib.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdlibf.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/math.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/_defs.h
-selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/machine/_limits.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/sensorFusion/flightmointor.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/pid/PID_Elon.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/pid/PID_ElonM.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/pid/ramp_Elon.h
-selfbalance.obj: C:/Users/elony/workspace_v12/selfBalance/HAL/DLOG_4CH_F.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/HAL/hal.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/string.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/xlocale/_string.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/sensorFusion/IMU6050_Elon.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdio.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdarg.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdlib.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdlibf.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/math.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_defs.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_limits.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/sensorFusion/flightmointor.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/pid/PID_Elon.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/pid/ramp_Elon.h
+selfbalance.obj: C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/HAL/comm_Elon.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/ctype.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_isfuncdcl.h
+selfbalance.obj: C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdlib.h
 
 ../selfbalance.c:
 
-C:/Users/elony/workspace_v12/selfBalance/device/driverlib.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/driverlib.h:
 
 C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_memmap.h:
 
 C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/adc.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdbool.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdbool.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/_ti_config.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_ti_config.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/linkage.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/linkage.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdint.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdint.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/_stdint40.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_stdint40.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/stdint.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/stdint.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/cdefs.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/cdefs.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/_types.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/_types.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/machine/_types.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_types.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/machine/_stdint.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_stdint.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/sys/_stdint.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/sys/_stdint.h:
 
 C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/inc/hw_adc.h:
 
@@ -283,45 +285,49 @@ C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/version.h:
 
 C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/driver_inclusive_terminology_mapping.h:
 
-C:/Users/elony/workspace_v12/selfBalance/device/device.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/device.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stddef.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stddef.h:
 
 syscfg/board.h:
 
-C:/Users/elony/workspace_v12/selfBalance/device/device.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/device/device.h:
 
 syscfg/c2000ware_libraries.h:
 
-C:/Users/elony/workspace_v12/selfBalance/HAL/hal.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/HAL/hal.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/string.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/string.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/xlocale/_string.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/xlocale/_string.h:
 
-C:/Users/elony/workspace_v12/selfBalance/sensorFusion/IMU6050_Elon.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/sensorFusion/IMU6050_Elon.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdio.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdio.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdarg.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdarg.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdlib.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdlib.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdlibf.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdlibf.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/math.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/math.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/_defs.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_defs.h:
 
-C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/machine/_limits.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_limits.h:
 
-C:/Users/elony/workspace_v12/selfBalance/sensorFusion/flightmointor.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/sensorFusion/flightmointor.h:
 
-C:/Users/elony/workspace_v12/selfBalance/pid/PID_Elon.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/pid/PID_Elon.h:
 
-C:/Users/elony/workspace_v12/selfBalance/pid/PID_ElonM.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/pid/ramp_Elon.h:
 
-C:/Users/elony/workspace_v12/selfBalance/pid/ramp_Elon.h:
+C:/Users/yao19/Documents/GitHub/selfbalanceVehicle/HAL/comm_Elon.h:
 
-C:/Users/elony/workspace_v12/selfBalance/HAL/DLOG_4CH_F.h:
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/ctype.h:
+
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_isfuncdcl.h:
+
+C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/stdlib.h:
 

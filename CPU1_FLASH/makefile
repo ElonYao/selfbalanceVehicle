@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS
+CG_TOOL_ROOT := C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS
 
 GEN_OPTS__FLAG := --cmd_file="syscfg/board.opt" --cmd_file="syscfg/c2000ware_libraries.opt" 
 GEN_CMDS__FLAG := 
@@ -14,12 +14,12 @@ ORDERED_OBJS += \
 "./syscfg/c2000ware_libraries.obj" \
 "./selfbalance.obj" \
 "./HAL/DLOG_4CH_F.obj" \
+"./HAL/comm_Elon.obj" \
 "./HAL/hal.obj" \
 "./device/F2837xD_CodeStartBranch.obj" \
 "./device/device.obj" \
 "./pid/PID_Elon.obj" \
 "./sensorFusion/IMU6050_Elon.obj" \
-"./sensorFusion/MadgwickAHRS.obj" \
 "./sensorFusion/flightmointor.obj" \
 "../2837xD_FLASH_lnk_cpu1.cmd" \
 "C:/ti/c2000/C2000Ware_5_04_00_00/driverlib/f2837xd/driverlib/ccs/Debug/driverlib.lib" \
@@ -153,15 +153,15 @@ all: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 selfBalance.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -Ooff --fp_mode=relaxed --advice:performance=all --define=_LAUNCHXL_F28379D --define=DEBUG --define=_FLASH --define=CPU1 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"selfBalance.map" --stack_size=0x100 --warn_sections -i"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/lib" -i"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="selfBalance_linkInfo.xml" --entry_point=code_start --rom_model -o "selfBalance.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -Ooff --fp_mode=relaxed --advice:performance=all --define=_LAUNCHXL_F28379D --define=DEBUG --define=_FLASH --define=CPU1 --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"selfBalance.map" --stack_size=0x100 --warn_sections -i"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/lib" -i"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="selfBalance_linkInfo.xml" --entry_point=code_start --rom_model -o "selfBalance.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "syscfg\board.obj" "syscfg\c2000ware_libraries.obj" "selfbalance.obj" "HAL\DLOG_4CH_F.obj" "HAL\hal.obj" "device\F2837xD_CodeStartBranch.obj" "device\device.obj" "pid\PID_Elon.obj" "sensorFusion\IMU6050_Elon.obj" "sensorFusion\MadgwickAHRS.obj" "sensorFusion\flightmointor.obj" 
-	-$(RM) "syscfg\board.d" "syscfg\c2000ware_libraries.d" "selfbalance.d" "HAL\DLOG_4CH_F.d" "HAL\hal.d" "device\device.d" "pid\PID_Elon.d" "sensorFusion\IMU6050_Elon.d" "sensorFusion\MadgwickAHRS.d" "sensorFusion\flightmointor.d" 
+	-$(RM) "syscfg\board.obj" "syscfg\c2000ware_libraries.obj" "selfbalance.obj" "HAL\DLOG_4CH_F.obj" "HAL\comm_Elon.obj" "HAL\hal.obj" "device\F2837xD_CodeStartBranch.obj" "device\device.obj" "pid\PID_Elon.obj" "sensorFusion\IMU6050_Elon.obj" "sensorFusion\flightmointor.obj" 
+	-$(RM) "syscfg\board.d" "syscfg\c2000ware_libraries.d" "selfbalance.d" "HAL\DLOG_4CH_F.d" "HAL\comm_Elon.d" "HAL\hal.d" "device\device.d" "pid\PID_Elon.d" "sensorFusion\IMU6050_Elon.d" "sensorFusion\flightmointor.d" 
 	-$(RM) "device\F2837xD_CodeStartBranch.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'

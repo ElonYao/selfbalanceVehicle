@@ -61,8 +61,8 @@
 #include "comm_Elon.h"
 
 #ifdef _FLASH
-#pragma CODE_SECTION(INT_IMU_data_Ready_XINT_ISR, ".TI.ramfunc");
-#pragma INTERRUPT(INT_IMU_data_Ready_XINT_ISR, {HP});
+#pragma CODE_SECTION(INT_mainController_ISR, ".TI.ramfunc");
+#pragma INTERRUPT(INT_mainController_ISR, {HP});
 #endif
 
 //Motor instances
@@ -89,9 +89,6 @@ quadratureHandle eqepMotorBHandle;
 
 //speed trajectory
 rampControl_t speedRamp=RAMPCTL_DEFAULTS;
-
-//speed control
-//PID_CONTROLLER_t speedController={PID_TERM_DEFAULTS,PID_PARAM_DEFAULTS,PID_DATA_DEFAULTS};
 
 PIDController_t speedController_Right;
 pidHandle speedController_RightHandle;
@@ -208,6 +205,7 @@ void main(void)
         updateCAN(CANHandle,imu1Handle,vehicle1handle);
         cmdParse(usartHandle);
         comDispatch(usartHandle,vehicle1handle);
+        speedRamp.targetValue=vehicle1.targetSpeed*0.001f;
         /*
         if(CPUTimer_getTimerOverflowStatus(filterTimer_BASE))
         {

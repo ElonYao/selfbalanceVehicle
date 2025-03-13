@@ -167,16 +167,13 @@ void cmdParse(cmdHandle handle)
 {
     serialCMD *obj= (serialCMD *)handle;
     uint16_t dataIndex,n;
-    uint16_t dataBuff[8];
-    memset(dataBuff,0,8);
-    strcpy(dataBuff,obj->rawCMD);// present interrupt data change during the cmdParse
-    if(obj->flagNewcmd==1 && dataBuff[6]==usartChecksum(dataBuff))
+    if(obj->flagNewcmd==1 && obj->rawCMD[6]==usartChecksum(obj->rawCMD))
     {
-        for(dataIndex=0;dataBuff[dataIndex]!=' ';dataIndex++)
+        for(dataIndex=0;obj->rawCMD[dataIndex]!=' ';dataIndex++)
         {
-          if(isalpha(dataBuff[dataIndex]))
+          if(isalpha(obj->rawCMD[dataIndex]))
           {
-              obj->cmdName[dataIndex]=toupper(dataBuff[dataIndex]);
+              obj->cmdName[dataIndex]=toupper(obj->rawCMD[dataIndex]);
           }
           else
           {
@@ -187,9 +184,9 @@ void cmdParse(cmdHandle handle)
         //byte 3~6
         for(dataIndex=dataIndex+1,n=0;dataIndex<6;dataIndex++,n++)
         {
-          if(isdigit(dataBuff[dataIndex]))
+          if(isdigit(obj->rawCMD[dataIndex]))
           {
-            obj->cmdPara[n]=dataBuff[dataIndex];
+            obj->cmdPara[n]=obj->rawCMD[dataIndex];
           }
           else
           {

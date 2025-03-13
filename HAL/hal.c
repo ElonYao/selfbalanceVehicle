@@ -26,7 +26,7 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     obj = (vehicle_t *)handle;
     obj->status = NORMALL;
     obj->balanceKp=1330.0f;
-    obj->balanceKd=147.5f;
+    obj->balanceKd=210.0f;
     obj->outMax=4750.0f;
     obj->outMin=-4750.0f;
     obj->targetAngle=0.50f;
