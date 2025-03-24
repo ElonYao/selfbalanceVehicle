@@ -25,19 +25,21 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     handle = (vehicleHandle)memory;
     obj = (vehicle_t *)handle;
     obj->status = NORMALL;
-    obj->balanceKp=1330.0f;
-    obj->balanceKd=210.0f;
-    obj->outMax=4750.0f;
-    obj->outMin=-4750.0f;
+    obj->balanceKp=128.0f;
+    obj->balanceKd=14.5f;
+    obj->outMax=3500.0f;
+    obj->outMin=-3500.0f;
     obj->targetAngle=0.50f;
-    obj->steeringKd=0.0f;
-    obj->steeringKd=0.0f;
+    obj->steeringKp=-11.6f;
+    obj->steeringKd=-2.2f;
     obj->steeringPWM=0.0f;
     obj->targetYawRate=0.0f;//unit:deg/s
     obj->speedMSLeft=0.0f;
     obj->speedMSRight=0.0f;
     obj->flag_turning=0;//left -1 right 1
     obj->batteryVolt=0.0f;
+    obj->positionError=0.0f;
+    obj->positionCoeff=0.03f;
     return handle;
 }
 quadratureHandle HAL_quadratureEncoderInit(void *memory,const size_t memorySize)
@@ -104,8 +106,8 @@ void HAL_balanceControl(vehicleHandle vehiclehandle,IMUHandle imuhandle)
     MPU6050_T *obj_IMU=( MPU6050_T *) imuhandle;
     float32_t result=0.0f;
     //subtract mechanical zero point roll angle and angular speed offset
-    obj_V->fbAngle=obj_IMU->orientation.roll*MATH_R2D-2.21f;
-    result=(obj_V->targetAngle-obj_V->fbAngle)*0.1*obj_V->balanceKp+obj_V->balanceKd*(0-obj_IMU->GX*MATH_R2D)*0.1;
+    obj_V->fbAngle=obj_IMU->orientation.roll*MATH_R2D+obj_IMU->rollOffset;
+    result=(obj_V->targetAngle-obj_V->fbAngle)*obj_V->balanceKp+obj_V->balanceKd*(0-obj_IMU->GX*MATH_R2D);
     obj_V->balancePWM=_constrain(result,obj_V->outMin,obj_V->outMax);
 
 }
@@ -113,15 +115,26 @@ void HAL_steeringControl(vehicleHandle vehiclehandle,IMUHandle imuhandle)
 {
     vehicle_t *obj_V= (vehicle_t *)vehiclehandle;
     MPU6050_T *obj_IMU=( MPU6050_T *) imuhandle;
-    float result=0,error=0;
-    obj_V->fbYawRate=obj_IMU->GZ*MATH_R2D;
+    float32_t error=0;
+    obj_V->fbYawRate=(obj_IMU->GZ*MATH_R2D+2.8f);//Yaw rate offset
     error=obj_V->targetYawRate-obj_V->fbYawRate;
-    result=error*obj_V->steeringKp+obj_V->steeringKd*(error-obj_V->lastError);
+    obj_V->steeringPWM=error*obj_V->steeringKp+obj_V->steeringKd*(error-obj_V->lastError);
     obj_V->lastError=error;
-    obj_V->steeringPWM=_constrain(result,obj_V->outMin,obj_V->outMax);
+    obj_V->steeringPWM=_constrain(obj_V->steeringPWM,-1000,1000);
 
 }
-
+void HAL_positionHold(vehicleHandle vehiclehandle)
+{
+    vehicle_t *obj_V= (vehicle_t *)vehiclehandle;
+    if(obj_V->targetSpeed<50 && !obj_V->targetYawRate)
+    {
+        obj_V->positionError+=obj_V->vehicleDirection*obj_V->speedMS*1000*0.005f;//speed integration error unit mm
+    }
+    else
+    {
+        obj_V->positionError=0;
+    }
+}
 void HAL_proportionalSteering(vehicleHandle vehiclehandle)
 {
     vehicle_t *obj= (vehicle_t *)vehiclehandle;
@@ -144,7 +157,7 @@ void HAL_fallDetection(vehicleHandle vehiclehandle,IMUHandle imuhandle)
     MPU6050_T *obj_IMU=( MPU6050_T *) imuhandle;
     if(fabsf(obj_IMU->orientation.roll*MATH_R2D)>60.0f)
     {
-        obj_V->status=FALLING;
+         obj_V->status=FALLING;
     }
 }
 

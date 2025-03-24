@@ -35,28 +35,6 @@ void IMURead(uint16_t addrSlave,uint16_t addrRegs,uint16_t dataLen ,uint16_t *da
 
 void IMUWrite(uint16_t addrSlave,uint16_t addrRegs,uint16_t dataLen ,uint16_t *dataBuffer)
 {
-        /*
-        I2C_setTargetAddress(IMU_6050_BASE, addrSlave);
-
-        while(I2C_isBusBusy(IMU_6050_BASE));
-
-        I2C_setConfig(IMU_6050_BASE,I2C_CONTROLLER_SEND_MODE|I2C_REPEAT_MODE);
-        I2C_sendStartCondition(IMU_6050_BASE);//The start condition will send out the slave address too
-       // while(!(I2C_getStatus(IMU_6050_BASE) & I2C_STS_REG_ACCESS_RDY));
-
-        I2C_putData(IMU_6050_BASE,addrRegs);
-        while(!(I2C_getStatus(IMU_6050_BASE) & I2C_STS_REG_ACCESS_RDY));
-
-        while(dataLen--)
-            {
-                I2C_putData(IMU_6050_BASE,*dataBuffer++);
-                while(!(I2C_getStatus(IMU_6050_BASE) & I2C_STS_REG_ACCESS_RDY));
-
-                if(dataLen==0)
-                {
-                    I2C_sendStopCondition(IMU_6050_BASE);  //stop
-                }
-            }*/
         while(I2C_getStopConditionStatus(IMU_6050_BASE));
         while(I2C_isBusBusy(IMU_6050_BASE));
 
@@ -103,6 +81,7 @@ IMUHandle MPU6050init(void *memory,const size_t memorySize)
 	obj->orientation.roll=0.0f;
 	obj->orientation.yaw=0.0f;
 	obj->CMfilter_alpha=0.02f;
+	obj->rollOffset=-3.25f;
 	//obj->dataBuffer={0};
     deviceReset();
     temp=0x01;//sleep off and use x gyro as clock source

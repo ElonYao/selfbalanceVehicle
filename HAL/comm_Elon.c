@@ -207,20 +207,23 @@ void comDispatch(cmdHandle handle,vehicleHandle vehicleHandler)
             switch(obj->cmdName[0])
             {
                 case 'F'://Forward
-                    vehicleObj->targetSpeed=(obj->cmdValue<=500? obj->cmdValue:500);//mm/s
+                    vehicleObj->targetSpeed=-(obj->cmdValue<=500? obj->cmdValue:500);//mm/s
                     break;
                 case 'B': //Backward
-                    vehicleObj->targetSpeed=-(obj->cmdValue<=500? obj->cmdValue:500);
+                    vehicleObj->targetSpeed=(obj->cmdValue<=500? obj->cmdValue:500);
                     break;
                 case 'L':// Left turn
-                    vehicleObj->flag_turning=-1;
+                    //vehicleObj->flag_turning=-1;
+                    vehicleObj->targetYawRate=-35.0f;
                     break;
                 case 'R': // Right turn
-                    vehicleObj->flag_turning=1;
+                    //vehicleObj->flag_turning=1;
+                    vehicleObj->targetYawRate=35.0f;
                     break;
                 case 'C': //clear setting
                     vehicleObj->targetSpeed=0.0f;
                     vehicleObj->flag_turning=0;
+                    vehicleObj->targetYawRate=0;
                     break;
                 default:
                     break;

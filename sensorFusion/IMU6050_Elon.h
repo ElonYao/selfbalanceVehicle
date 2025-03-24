@@ -65,6 +65,7 @@ typedef struct _imu_
     volatile uint16_t flag_newRaw;
     volatile uint16_t flag_dataReady;
     uint16_t flag_calibrattionDone;
+    float32_t rollOffset;
 
 }MPU6050_T;
 

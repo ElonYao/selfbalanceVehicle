@@ -201,51 +201,12 @@ void main(void)
         //falling detection
         HAL_fallDetection(vehicle1handle,imu1Handle);
         HAL_hoverDetection(vehicle1handle,imu1Handle);
-        HAL_proportionalSteering(vehicle1handle);
         updateCAN(CANHandle,imu1Handle,vehicle1handle);
         cmdParse(usartHandle);
         comDispatch(usartHandle,vehicle1handle);
         speedRamp.targetValue=vehicle1.targetSpeed*0.001f;
-        /*
-        if(CPUTimer_getTimerOverflowStatus(filterTimer_BASE))
-        {
-
-                RC_MACRO(speedRamp)
-                if(vehicle1.status==PICKUP || FALLING==vehicle1.status)
-                 {
-                     motorSetDutyCycle(motor1Handle, 0.0f);
-                     motorSetDutyCycle(motor2Handle, 0.0f);
-                     motorSetStatus(motor1Handle,MOTOR_BRAKE);
-                     motorSetStatus(motor2Handle,MOTOR_BRAKE);
-                     motorRun(motor1Handle);
-                     motorRun(motor2Handle);
-                 }
-                else
-                {
-                    HAL_balanceControl(vehicle1handle,imu1Handle);
-                    //right wheel speed control
-                   speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-                   speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
-                   speedPIcontroller3(speedController_RightHandle);
-                    //left wheel speed control
-                   speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-                   speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
-                   speedPIcontroller3(speedController_LeftHandle);
-
-
-                   motor1.dutyCycle=vehicle1.balancePWM+speedController_Left.out+vehicle1.steeringPWM;
-                   motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-vehicle1.steeringPWM;
-
-                   HAL_vehicleRun(motor1Handle,motor2Handle);
-                   status_send(imu1.orientation.roll*MATH_R2D, imu1.orientation.pitch*MATH_R2D, imu1.orientation.yaw*MATH_R2D);
-                }
-
-            CPUTimer_startTimer(filterTimer_BASE);
-            */
-
-        }
+    }
 }
-
 
 __interrupt void INT_mainController_ISR(void)
 {
@@ -265,7 +226,7 @@ __interrupt void INT_mainController_ISR(void)
         //First order low pass filter alpha=1/(1+2*pi*F_cutoff*Ts) 5Hz CUTOFF here to filter the speed.
         vehicle1.speedMSLeft=eqepMotorB.speedMS*0.136f+vehicle1.speedMSLeft*0.864f;
         //data_print(eqepMotorB.speedMS,vehicle1.speedMSLeft);
-        vehicle1.vehicleDirection=eqepMotorA.dir;
+        vehicle1.vehicleDirection=(eqepMotorA.dir==0? -eqepMotorB.dir:eqepMotorA.dir);
         vehicle1.speedMS=(vehicle1.speedMSLeft+vehicle1.speedMSRight)*0.5f;
 
         //speed ramp
@@ -281,31 +242,57 @@ __interrupt void INT_mainController_ISR(void)
          }
         else
         {
-            HAL_balanceControl(vehicle1handle,imu1Handle);
-            /*
-            //right wheel speed control
-           speedController_Right.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-           speedController_Right.fbValue=eqepMotorA.dir*vehicle1.speedMSRight*1000;
-           speedPIcontroller2(speedController_RightHandle);
-            //left wheel speed control
-           speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
-           speedController_Left.fbValue=-eqepMotorB.dir*vehicle1.speedMSLeft*1000;
-           speedPIcontroller2(speedController_LeftHandle);
-           */
+           HAL_balanceControl(vehicle1handle,imu1Handle);
+           HAL_positionHold(vehicle1handle);
+
            speedController_Left.refInput=((fabsf(speedRamp.setPoint)<0.03f)? 0 : speedRamp.setPoint)*1000;
            speedController_Left.fbValue=vehicle1.vehicleDirection*vehicle1.speedMS*1000;
-           speedPIcontroller2(speedController_LeftHandle);
+           continuousP_Icontroller(speedController_LeftHandle,vehicle1handle);
 
-           motor1.dutyCycle=vehicle1.balancePWM+speedController_Left.out+vehicle1.steeringPWM;
-           motor2.dutyCycle=vehicle1.balancePWM+speedController_Left.out-vehicle1.steeringPWM;
-           //motor1.dutyCycle=1200;
-           //motor2.dutyCycle=1200;
+           HAL_steeringControl(vehicle1handle,imu1Handle);
+
+           motor1.dutyCycle=vehicle1.balanceKp*speedController_Left.out+vehicle1.balancePWM+vehicle1.steeringPWM;
+           motor2.dutyCycle=vehicle1.balanceKp*speedController_Left.out+vehicle1.balancePWM-vehicle1.steeringPWM;
+
            HAL_vehicleRun(motor1Handle,motor2Handle);
         }
         //CAN transmission timing
         can1.timeBaseCounter1++;
         can1.timeBaseCounter2++;
         Interrupt_clearACKGroup(INT_mainController_INTERRUPT_ACK_GROUP);
+}
+__interrupt void INT_mainCAN_ISR(void)
+{
+    uint32_t status;
+    status=CAN_getInterruptCause(mainCAN_BASE);
+    if(CAN_INT_INT0ID_STATUS==status)
+    {
+        status=CAN_getStatus(mainCAN_BASE);
+        if(((status & ~(CAN_STATUS_RXOK))!=CAN_STATUS_LEC_MSK) && ((status & ~(CAN_STATUS_RXOK))!=CAN_STATUS_LEC_NONE) )
+        {
+            can1.flagError=1;
+        }
+    }
+    else if(status == 1)//received message object ID, not message ID
+    {
+        CAN_readMessage(mainCAN_BASE, 1, (uint16_t *)can1.rxBuffer);
+        CAN_clearInterruptStatus(mainCAN_BASE, 1);
+        can1.rxMsgCount++;
+        can1.flagRxDone=1;
+        can1.flagError=0;
+    }
+    CAN_clearGlobalInterruptStatus(mainCAN_BASE,CAN_GLOBAL_INT_CANINT0);
+    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP9);
+}
+
+__interrupt void INT_BL_PIC_RX_ISR(void)
+{
+    SCI_readCharArray(BL_PIC_BASE, usartB.rawCMD, 8);
+    usartB.flagNewcmd=1;
+
+    SCI_clearOverflowStatus(BL_PIC_BASE);
+    SCI_clearInterruptStatus(BL_PIC_BASE, SCI_INT_RXFF);
+    Interrupt_clearACKGroup(INT_BL_PIC_RX_INTERRUPT_ACK_GROUP);
 }
 /*
 __interrupt void INT_EQEP_motorA_ISR(void)
@@ -342,39 +329,6 @@ __interrupt void INT_EQEP_motorB_ISR(void)
     Interrupt_clearACKGroup(INT_EQEP_motorB_INTERRUPT_ACK_GROUP);
 }
 */
-__interrupt void INT_mainCAN_ISR(void)
-{
-    uint32_t status;
-    status=CAN_getInterruptCause(mainCAN_BASE);
-    if(CAN_INT_INT0ID_STATUS==status)
-    {
-        status=CAN_getStatus(mainCAN_BASE);
-        if(((status & ~(CAN_STATUS_RXOK))!=CAN_STATUS_LEC_MSK) && ((status & ~(CAN_STATUS_RXOK))!=CAN_STATUS_LEC_NONE) )
-        {
-            can1.flagError=1;
-        }
-    }
-    else if(status == 1)//received message object ID, not message ID
-    {
-        CAN_readMessage(mainCAN_BASE, 1, (uint16_t *)can1.rxBuffer);
-        CAN_clearInterruptStatus(mainCAN_BASE, 1);
-        can1.rxMsgCount++;
-        can1.flagRxDone=1;
-        can1.flagError=0;
-    }
-    CAN_clearGlobalInterruptStatus(mainCAN_BASE,CAN_GLOBAL_INT_CANINT0);
-    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP9);
-}
-
-__interrupt void INT_BL_PIC_RX_ISR(void)
-{
-    SCI_readCharArray(BL_PIC_BASE, usartB.rawCMD, 8);
-    usartB.flagNewcmd=1;
-
-    SCI_clearOverflowStatus(BL_PIC_BASE);
-    SCI_clearInterruptStatus(BL_PIC_BASE, SCI_INT_RXFF);
-    Interrupt_clearACKGroup(INT_BL_PIC_RX_INTERRUPT_ACK_GROUP);
-}
 //
 // End of File
 //

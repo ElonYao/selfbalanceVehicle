@@ -55,7 +55,8 @@ typedef struct _vehicle_
     int16_t flag_turning;
 
     float32_t batteryVolt;
-
+    float32_t positionError;
+    float32_t positionCoeff;
 }vehicle_t;
 
 typedef enum
@@ -112,6 +113,7 @@ void HAL_hoverDetection(vehicleHandle vehiclehandle,IMUHandle imuhandle);
 void HAL_balanceControl(vehicleHandle vehiclehandle,IMUHandle imuhandle);
 void HAL_steeringControl(vehicleHandle vehiclehandle,IMUHandle imuhandle);
 void HAL_proportionalSteering(vehicleHandle vehiclehandle);
+void HAL_positionHold(vehicleHandle vehiclehandle);
 void HAL_vehicleRun(motorHandle handle1,motorHandle handle2);
 quadratureHandle HAL_quadratureEncoderInit(void *memory,const size_t memorySize);
 void HAL_speedCalculation(quadratureHandle handle);
