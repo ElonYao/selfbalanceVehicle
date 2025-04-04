@@ -19,7 +19,7 @@ pidHandle pidControllerInit(void *pMemory, const size_t numBytes)
     obj->N=100;//only valid for derivative term
     obj->flag_AntiWindUp=1;
     obj->kp=-0.039f;
-    obj->ti=-0.00025f;
+    obj->ti=-0.001f;//0.00025
     //obj->inv_ti=1.0f/obj->ti;
     obj->td=0.0f;
     obj->ts=0.005f;
