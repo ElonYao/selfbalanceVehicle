@@ -81,7 +81,7 @@ IMUHandle MPU6050init(void *memory,const size_t memorySize)
 	obj->orientation.roll=0.0f;
 	obj->orientation.yaw=0.0f;
 	obj->CMfilter_alpha=0.02f;
-	obj->rollOffset=-3.25f;
+	obj->rollOffset=-2.9f;
 	//obj->dataBuffer={0};
     deviceReset();
     temp=0x01;//sleep off and use x gyro as clock source

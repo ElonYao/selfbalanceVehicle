@@ -25,12 +25,12 @@ vehicleHandle HAL_vehicleInit(void *memory,const size_t memorySize)
     handle = (vehicleHandle)memory;
     obj = (vehicle_t *)handle;
     obj->status = NORMALL;
-    obj->balanceKp=128.0f;
-    obj->balanceKd=14.5f;
+    obj->balanceKp=170.5f;//201.5
+    obj->balanceKd=19.0f;//20
     obj->outMax=3500.0f;
     obj->outMin=-3500.0f;
     obj->targetAngle=0.50f;
-    obj->steeringKp=-11.6f;
+    obj->steeringKp=-12.0f;
     obj->steeringKd=-2.2f;
     obj->steeringPWM=0.0f;
     obj->targetYawRate=0.0f;//unit:deg/s
